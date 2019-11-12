@@ -1,0 +1,262 @@
+ {% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>联盟商品链接上传</title>
+	
+	<meta charset="UTF-8" />
+ 		 <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+        <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+        <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <link href="https://cdn.bootcss.com/bootstrap-table/1.11.1/bootstrap-table.min.css" rel="stylesheet">
+        <script src="https://cdn.bootcss.com/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
+        <script src="https://cdn.bootcss.com/bootstrap-table/1.11.1/locale/bootstrap-table-zh-CN.min.js"></script>
+
+	<script>
+	   function goods_link(){
+		   
+		   goods_link_frist = document.getElementById("goods_link_frist").value;
+		   if (goods_link_frist == '' || goods_link_frist == undefined || goods_link_frist == null){
+               alert("联盟商品链接不能为空！！！")
+               
+            }else{
+            	 $.ajax({
+				        type:"POST",
+				        data: {'url':goods_link_frist},
+				        url: "{% url 'Administrator:goods_link_info' %}", //后台处理函数的url 这里用的是static url 需要与urls.py中的name一致
+				        cache: false,
+				        dataType: "json",
+				        success: function(data){
+				        	alert(data["status"])
+				        	location.reload()
+				        	
+				        	}
+				       });  
+          	  
+            }
+	   }
+	   
+	
+	</script>
+	
+	<style>
+	.table tbody tr td{
+      vertical-align: middle;
+	  text-align: center;
+   }
+   .bootstrap-table .table thead>tr>th {
+                text-align: center;
+            }
+	</style>
+<style>
+	.m{ width: 800px; margin-left: auto; margin-right: auto; }
+</style>
+<script>
+$(function(){
+ $('.summernote').summernote({
+        height: 200,
+        tabsize: 2,
+        lang: 'zh-CN'
+    });
+});
+</script>
+</head>
+
+
+<body>
+	<h1>联盟商品链接上传</h1><br><input style='width:700px'  type="text" id="goods_link_frist"><input type="button" onclick="goods_link()" value="上传链接" ><br>
+     商品详情:
+	<table id="mytab" class="table table-hover"></table>
+	
+	<div id="showdiv" style="width: 80%; margin: 0 auto; height:500px; border: 0px solid #999; display: none;position:fixed; *position:absolute; top:20%; left:10%; margin:-50px 0 0 -50px; background: #fff">
+			  <input type="button" onclick="closeWindow()" value="关闭">
+			    <div style="text-indent: 50px; height: 500px; padding: 0.5rem; line-height: 1rem;color:black; "  id="content"></div>
+    </div>
+    
+    
+	
+<script type="text/javascript" >
+
+
+$('#mytab').bootstrapTable({
+
+			
+			    url:"/get_good_particulars",     //从后台获取数据时，可以是json数组，也可以是json对象
+			    dataType: "json",
+			    method: 'get',                      //请求方式（*）
+			    toolbar: '#toolbar',                //工具按钮用哪个容器
+			    striped: true,                      //是否显示行间隔色
+			    cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+			    pagination: true,                   //是否显示分页（*）
+			    sortable: true,                     //是否启用排序
+			    sortOrder: "asc",                   //排序方式
+			    sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）,数据为json数组时写client，json对象时（有total和rows时）这里要为server方式，写client列表无数据
+			    pageNumber: 1,                       //初始化加载第一页，默认第一页
+			    pageSize: 50,                       //每页的记录行数（*）
+			    pageList: [50, 100],        //可供选择的每页的行数（*）
+			    strictSearch: true,
+			    showColumns: true,                  //是否显示所有的列
+			    showRefresh: true,                  //是否显示刷新按钮
+			    minimumCountColumns: 2,             //最少允许的列数
+			    clickToSelect: true,                //是否启用点击选中行
+			    uniqueId: "ID",                     //每一行的唯一标识，一般为主键列
+			    showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+			    cardView: false,                    //是否显示详细视图
+			    detailView: true,                   //是否显示父子表
+			    idField: 'project_name',          //指定主键
+			    singleSelect: true,                //开启单选,想要获取被选中的行数据必须要有该参数
+			
+			    //得到查询的参数，会在url后面拼接，如：?rows=5&page=2&sortOrder=asc&search_kw=&_=1564105760651
+			    queryParams: function (params) {
+			        //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+			        var query_params = {
+			            rows: params.limit,                         //页面大小
+			            page: (params.offset / params.limit) + 1,   //页码
+			            sort: params.sort,      //排序列名
+			            sortOrder: params.order, //排位命令（desc，asc）
+			
+			            //查询框中的参数传递给后台
+			            search_kw: $('#search-keyword').val(), // 请求时向服务端传递的参数
+			        };
+			        return query_params;
+			    },
+			
+				columns: [
+				
+				
+					{
+			            field: 'sid',
+			            title: '序号',
+			            width: 120,
+
+			        },
+
+					
+			        {
+			            field: 'id',  　　　　　　//返回数据rows数组中的每个字典的键名与此处的field值要保持一致
+			            title: '商品图片 款式编码',
+			            width: 200,
+			        },
+			        
+			        {
+			            field: 'name',
+			            title: '库存量 版状态',
+			            width: 300,
+			        },
+			        {
+			            field: 'commission',
+			            title: '产品折后价 商品标题 佣金比例 优惠卷信息 近30天销量',
+			            width: 300,
+			        },
+			        {
+			            field: 'commission',
+			            title: '图片个数、视频个数、有无描述',
+			            width: 300,
+			        },
+			        {
+			            field: 'operate',
+			            title: '操作',
+			            width: 300,
+			            align: 'center',
+			            valign: 'middle',
+			            formatter: actionFormatter,
+
+			         },
+			
+			    ],
+			    onLoadSuccess: function(data){
+		
+			        console.log(data);
+			
+			
+			        var data=$("#mytab").bootstrapTable("getData");
+			     
+			        
+			    }
+			
+			});
+			
+			
+			//操作栏的格式化,value代表当前单元格中的值，row代表当前行数据，index表示当前行的下标
+			function actionFormatter(value, row, index) {
+				var id = index;
+				var data = JSON.stringify(row);
+				var data_json = JSON.parse(data);
+				var result = "";
+				result += "<a href='javascript:;' style='background-color:#D87E24;color:#ffffff;;margin-left:2px'  class='btn btn-xs red' onclick=\"uploading_picture('" + data_json["sid"] + "')\" title='上传商品图片'>上传商品图片</span></a>";
+				result += "<a href='javascript:;' style='background-color:#DC4E41;color:#ffffff;;margin-left:2px'  class='btn btn-xs red' onclick=\"uploading_video('" + data_json["sid"] + "')\" title='上传商品视频'>上传商品视频</span></a>";
+				result += "<a href='javascript:;' style='background-color:#FBC327;color:#ffffff;;margin-left:2px'  class='btn btn-xs red' onclick=\"uploading_describe('" + data_json["sid"] + "')\" title='上传商品描述'>上传商品描述</span></a>";
+				result += "<a href='javascript:;' style='background-color:#030303;color:#ffffff;;margin-left:2px'  class='btn btn-xs red' onclick=\"del('" + data_json["sid"] + "')\" title='删除'>删除淘宝商品</span></a>";
+				return result;
+			}
+
+			function uploading_picture(id){
+				$("#content").empty();
+            	file="<form action='/goods_picture_upload' method='post' enctype='multipart/form-data'>{% csrf_token %}<input class='upload-file-img' type='file' name='picture' id='personsFile' multiple='multiple' accept='image/*' onchange='uploadImg()'/><input type='hidden' name='id' value='"+id+"'><input type='submit' value='上传'></form> 	"
+            	$("#content").append(file);
+            	$('#showdiv').show();
+				
+			}
+			function uploadImg() {
+                var _name, _fileName, personsFile;
+                personsFile = document.getElementById("personsFile");
+                _name = personsFile.value;
+                _fileName = _name.substring(_name.lastIndexOf(".") + 1).toLowerCase();
+                
+                alert(_name)
+                
+                if (_fileName !== "png" && _fileName !== "jpg" && _fileName=="") {
+                	document.getElementById("personsFile").value=""
+                    alert("上传图片格式不正确，请重新上传");
+                }
+            }
+			
+			//上传视频
+			function uploading_video(id){
+
+				$("#content").empty();
+				file="<form action='/task_upload' method='post'  enctype='multipart/form-data'>{% csrf_token %} <input class='upload-file-img' type='file' alt='默认图示' name='video' id='video'><input type='hidden' name='id' value='"+id+"'><input type='submit'  value='上传'> </form>"
+            	$("#content").append(file);
+            	$('#showdiv').show();
+				
+            				
+			}
+             //上传描述
+			function uploading_describe(id){
+				$("#content").empty();
+            	file="<form action='/describe_upload' method='post' enctype='multipart/form-data'><input type='hidden' name='csrfmiddlewaretoken' value='JJ3CyAEdb58I1MGKcfyh8df8QhiRlXWCKkDSCym6OlR6hyXGViGc2lTakQZLSqc5'><input type='hidden' name='id' value='"+id+"'><textarea name='describe' rows='30' cols='50' placeholder='若上传描述错误，重新上传即可'></textarea><input type='submit' value='上传描述'></form> 	"
+            	$("#content").append(file);
+            	$('#showdiv').show();
+            	
+				
+				
+			}
+			
+			function del(del_id){
+				alert(del_id)
+				
+				$.ajax({
+			        type:"POST",
+			        data: {'del_id':del_id},
+			        url: "{% url 'Administrator:del_goods' %}", //后台处理函数的url 这里用的是static url 需要与urls.py中的name一致
+			        cache: false,
+			        dataType: "json",
+			        success: function(data){
+			        	
+			        	
+			        	alert(data["status"])
+			        	location.reload()
+			        }
+			       });         
+			}
+			function closeWindow() {
+				$('#showdiv').hide();  
+				$("#content").empty();
+			    $('#showdiv .content').html("");   
+		  }
+
+
+</script>
+</body>
+</html>
+

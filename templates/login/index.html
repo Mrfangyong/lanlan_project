@@ -1,0 +1,132 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+<title>首页</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="{% static 'css/reset.css' %}"> 
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<script src="{% static 'js/modernizr.js' %}"></script>
+<script src="{% static 'js/jquery-1.11.0.min.js' %}  "></script>
+<script src="{% static 'js/main.js' %}"></script> 
+<script>
+$(document).ready(function(){
+    $.ajaxSetup({
+         data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
+    });
+}); 
+function actor_login(){
+	var role=document.getElementById("role").value;
+	var username=document.getElementById("signin-username").value;  
+	var password=document.getElementById("signin-password").value;  
+	$(".userset").empty();
+	if (username == '' || username == undefined || username == null) {
+        $(".userset").append("<span style='color:red'>The name cannot be empty!</span>");
+    }else{
+    	$(".userset").empty();
+    	if (password == '' || password == undefined || password == null) {
+            $(".userset").append("<span style='color:red'>The password cannot be empty!</span>");
+    	}	
+    	else{
+    		$.ajax({
+        		type:"POST",
+        		data:{"username":username,"password":password},
+        		url: "{% url 'login_username' %}", //后台处理函数的url 这里用的是static url 需要与urls.py中的name一致
+                cache: false,
+                dataType: "json",
+                success: function(data){            //成功时弹出view传回来的结果
+                	
+                	alert(data["status"]);
+                	
+                	if (data["role"]=="actor"){
+                		window.location.href="/artist_show?username="+username+"";
+                	}else if(data["role"]=="scriptwriter"){
+                		window.location.href="/compile_show?compilename="+username+"";
+                	}else if(data["role"]=="audit"){
+                		window.location.href="/audit_show?username="+username+"";
+                	}else if(data["role"]=="Administrator"){
+                		window.location.href="/Administrator_show?username="+username+"";
+                	}else if(data["role"]=="microblog_user"){
+                		window.location.href="/microblog_user_show?username="+username+"";
+                	}
+                },
+            });
+    		
+    	}
+    	
+    }
+}
+
+
+
+</script>
+</head>
+<body>
+<header role="banner">
+		<div id="cd-logo"><a href="#0"><img src="{% static 'img/cd-logo.svg' %}" alt="Logo"></a></div>
+
+		<nav class="main-nav">
+			<ul>
+				<!-- inser more links here -->
+				<li><a class="cd-signin" href="#0">Sign in</a></li>
+			</ul>
+		</nav>
+	</header>
+	<div class="cd-user-modal"> <!-- this is the entire modal form, including the background -->
+		<div class="cd-user-modal-container"> <!-- this is the container wrapper -->
+			<ul class="cd-switcher">
+				<li><a href="#0">登陆</a></li>
+			</ul>
+
+			<div id="cd-login"> <!-- log in form -->
+				<form class="cd-form">
+					<p class="fieldset">
+					    <input type="hidden" id="role" value="1">
+						<label class="image-replace cd-email" for="signin-username">username</label>
+						<input class="full-width has-padding has-border" id="signin-username" type="text" placeholder="username">
+						<span class="cd-error-message">Error message here!</span>
+						<p class="userset">
+						</p>
+					</p>
+
+					<p class="fieldset">
+						<label class="image-replace cd-password" for="signin-password">Password</label>
+						<input class="full-width has-padding has-border" id="signin-password" type="Password"  placeholder="Password">
+						<a href="#0" class="hide-password">Hide</a>
+						<span class="cd-error-message">Error message here!</span>
+						<p class="passset">
+						</p>
+					</p>
+					<p class="fieldset">
+						<input class="full-width" type="submit" onclick="actor_login()" value="Login">
+					</p>
+				</form>
+
+				
+			</div> 
+
+			
+		</div>
+	</div> 
+	<div  style="font-size:50px;text-align:center;padding-top:200px">
+	    <label>
+	       蓝蓝蓝蓝自媒体平台
+	    </label>
+	    <p style="font-size:20px;padding-top:15px">Blue blue blue we media platform</p>
+	</div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,475 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8">
+ <title>我的主页</title>
+ <link rel="stylesheet" href="{% static 'css/htmleaf-demo1.css' %}">
+ 	
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+<style> 
+body{
+background-color:#EAE8E8
+}
+.flex-container {
+    display: -webkit-flex;
+    display: flex;  
+    -webkit-flex-flow: row wrap;
+    flex-flow: row wrap;
+    font-weight: bold;
+    text-align: center;
+    background-color:#EAE8E8
+}
+
+.flex-container > * {
+    padding: 0px;
+    flex: 1 100%;
+}
+
+.main {
+    text-align: left;
+    background-color: #FFFFFF;
+    height:700px;
+    margin-top:20px;
+    margin-left:20px;
+}
+
+.header {background: #FFFFFF;height:100px;margin-left:20px;margin-top:10px;}
+.aside2 {background:  #FFFFFF;margin-top:20px;margin-left:20px}
+
+@media all and (min-width: 600px) {
+    .aside { flex: 1 auto; }
+}
+
+@media all and (min-width: 800px) {
+    .main    { flex: 3 0px; }
+    .main    { order: 2; }
+    .aside2 { order: 3; }
+}
+#fabu{
+    background-color:bule;
+	display: inline-block;
+	outline: none;
+	cursor: pointer;
+	text-align: center;
+	text-decoration: none;
+	
+	font: 16px/100% 'Microsoft yahei',Arial, Helvetica, sans-serif;
+	padding: .5em 2em .55em;
+	text-shadow: 0 1px 1px rgba(0,0,0,.3);
+	-webkit-border-radius: .5em; 
+	-moz-border-radius: .5em;
+	border-radius: .5em;
+	-webkit-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+	-moz-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+	box-shadow: 0 1px 2px rgba(0,0,0,.2);
+	margin-left:20px;
+	margin-top:10px;
+}
+.table4_4 {
+margin-left:25px;
+margin-top:50px;
+}
+.table4_4 table {
+	width:100%;
+	margin:15px 0;
+	border:0;
+}
+.table4_4 th {
+	background-color:#C3E7FA;
+	color:#000000
+}
+.table4_4,.table4_4 th,.table4_4 td {
+	color:#000000;
+	font-size:0.95em;
+	text-align:center;
+	padding:15px;
+	border-collapse:collapse;
+}
+.table4_4 th,.table4_4 td {
+	border: 1px solid #dcf1fc;
+	border-width:1px 0 1px 0
+}
+.table4_4 tr {
+	border: 1px solid #dcf1fc;
+}
+.table4_4 tr:nth-child(odd){
+	background-color:#ebf7fd;
+}
+.table4_4 tr:nth-child(even){
+	background-color:#fdfdfd;
+}
+button {
+		  
+		  color: #fff;
+		  border: 3px solid #fff;
+		  border-radius: 50px;
+		  padding: 0.8rem 2rem;
+		  font: 24px "Margarine", sans-serif;
+		  outline: none;
+		  cursor: pointer;
+		  position: relative;
+		  transition: 0.2s ease-in-out;
+		  letter-spacing: 2px;
+		}
+@keyframes rainbow {
+		  0% {
+		    background: #1abc9c;
+		  }
+		  10% {
+		    background: #2ecc71;
+		  }
+		  20% {
+		    background: #3498db;
+		  }
+		  30% {
+		    background: #9b59b6;
+		  }
+		  40% {
+		    background: #e74c3c;
+		  }
+		  50% {
+		    background: #e67e22;
+		  }
+		  60% {
+		    background: #f1c40f;
+		  }
+		  70% {
+		    background: #2c3e50;
+		  }
+		  80% {
+		    background: #9b59b6;
+		  }
+		}
+		.button-jittery button {
+		  animation: jittery 4s infinite;
+		}
+		.button-jittery button:hover {
+		  animation: heartbeat 0.2s infinite;
+		}
+
+
+		@keyframes heartbeat {
+		  50% {
+		    transform: scale(1.1);
+		  }
+		}
+</style>
+<script src="http://cdn.bootcss.com/jquery/1.11.0/jquery.min.js" type="text/javascript"></script>
+
+
+<script>
+
+
+function look_video(obj){
+	var sc_id1 = $(obj).attr('id');
+	$.ajax({
+        type:"POST",
+        data:{"sc_id1":sc_id1},
+        url: "{% url 'cheakvideo' %}", //后台处理函数的url 这里用的是static url 需要与urls.py中的name一致
+        cache: false,
+        dataType: "json",
+        success: function(data){
+            alert(data["status"])
+        	$('#showdiv1').show();
+        	var path2="/static"+data["videos"]
+        	$('#showdiv1').append('<a class="pic" href="#"><video src="'+path2+'"   controls="controls" autobuffer></video></a>')
+        	
+        	
+        },
+        error: function(data){
+            alert(data["status"]);
+        }
+    });
+	
+}
+//完成任务  这里会ajax 数据
+function fabu(){
+	style="display:none;"
+	document.getElementById("one").style.display="";
+	$("#fubu1").empty()
+	var username=document.getElementById("user").value;  
+    $.ajax({
+        type:"POST",
+        data: {'username':username},
+        url: "{% url 'get_audit' %}", //后台处理函数的url 这里用的是static url 需要与urls.py中的name一致
+        async:false,
+        cache: false,
+        dataType: "json",
+        success: function(data){  
+        	$("#fubu1").append("<tr><th>任务状态</th><th>视频</th><th>任务完成时间</th><th>剧本</th><th>产品</th></tr>")
+        	for (var i = 0; i < data["status"].length; i++){  
+	        	$.ajax({
+	                type:"POST",
+	                data: {'sc_id1':data["status"][i]["aid"]},
+	                url: "{% url 'get_title' %}", //后台处理函数的url 这里用的是static url 需要与urls.py中的name一致
+	                cache: false,
+	                async:false,
+	                dataType: "json",
+	                success: function(data1){
+	                	$.ajax({
+	                        type:"POST",
+	                        data: {'sc_id2':data["status"][i]["pid"]},
+	                        url: "{% url 'get_product' %}", //后台处理函数的url 这里用的是static url 需要与urls.py中的name一致
+	                        cache: false,
+	                        async:false,
+	                        dataType: "json",
+	                        success: function(data2){
+	     	             	   $("#fubu1").append("<tr><td>"+data["status"][i]["task_status"]+"</td><td>"+"<input style='background-color:#EBF7FD;color:blue;border:0px' type='button' id="+data["status"][i]["vid"]+" value='查看视频' onclick='look_video(this)'>"+"</td><td>"+(data["status"][i]["upload_time"]).slice(0,16)+"</td><td><input style='background-color:#EBF7FD;color:blue;border:0px' type='button' id="+data["status"][i]["aid"]+" value="+data1["palys"]+" onclick='adsadssfa(this)'></td><td>"+data2["pname"]+"</td></tr>");	   
+
+	                        },
+	                        
+	                    });
+
+	                },
+	                
+	            });
+        	}
+        },
+        
+    });
+    
+	 
+	document.getElementById("two").style.display="none";
+}
+
+//未完成任务
+function weifabu(){
+	style="display: none;"
+	document.getElementById("two").style.display="";
+	document.getElementById("one").style.display="none";
+}
+//领取任务
+function Get_task(){
+	var username=document.getElementById("user").value;  
+	alert(username)
+	alert("领取任务")
+	window.location.href="/Get_task?username="+username+""; 
+}
+//艺人排行
+function Artist_ranking(){
+	alert("艺人排行")
+	window.location.href="/Artist_ranking"; 
+}
+//样例视频
+function sample_video(){
+	alert("样例视频")
+	window.location.href="/sample_video"; 
+}
+function deltask(obj){
+	var sc_id1 = $(obj).attr('id');
+	alert(sc_id1)
+	$.ajax({
+        type:"POST",
+        data: {'sc_id1':sc_id1},
+        url: "{% url 'del_task' %}", //后台处理函数的url 这里用的是static url 需要与urls.py中的name一致
+        cache: false,
+        dataType: "json",
+        success: function(data){
+        	alert(data["status"])
+        	window.location.href="/artist_show?username={{request.session.username}}"; 
+        },
+        
+    });
+}
+function adsadssfa(obj){
+	var sc_id1 = $(obj).attr('id');
+	alert(sc_id1)
+	$('#showdiv').show();
+	$.ajax({
+        type:"POST",
+        data: {'sc_id1':sc_id1},
+        url: "{% url 'check_content' %}", //后台处理函数的url 这里用的是static url 需要与urls.py中的name一致
+        cache: false,
+        dataType: "json",
+        success: function(data){
+        	 var text ="标题：<label style='color:red'>"+data["script_title"]+"</label>&nbsp;&nbsp;&nbsp;&nbsp;标签："+"<label style='color:red'>"+data["play_age"]+","+data["play_position"]+","+data["play_sex"]+","+data["play_actor_number"]+","+data["play_product_option"] +","+data["play_content"] +","+data["play_script_type"]+"</label>"+"&nbsp;&nbsp;&nbsp;&nbsp;创作时间：<label  style='color:red'>"+data["upload_time"]+"</label>"+ "<br><br><br><p>"+data["script_content"]+"</p>";
+            $("#content").append(text);
+        },
+        error: function(data){
+            alert(data["status"]);
+        }
+    });
+}
+
+// 关闭弹窗
+function closeWindow() {
+	$('#showdiv').hide();   //隐藏弹窗
+	$("#content").empty();
+    $('#showdiv .content').html("");    //清空追加的内容
+}
+function closeWindow1(){
+	 $('#showdiv1').hide();
+	 $("#showdiv1").empty();
+	 window.location.href="/artist_show?username={{request.session.username}}";  
+}
+function  next(){
+	{% if tasks.has_next %}
+    page={{ tasks.next_page_number }};
+    {% endif %}
+    $.ajax({
+    	type:"POST",
+    	url:"{% url 'artist_show' %}",
+    	data:{"page":page},        
+    	success:function(data){
+    		$("#jobs_table").html(data);  
+    		document.getElementById("two").style.display="block";
+         }
+    })
+}
+function pre(){
+	 {% if tasks.has_previous %}
+	   page={{ tasks.previous_page_number }};
+	　{% endif %}
+	  $.ajax({
+		  type:"POST",
+		  url:"{% url 'artist_show' %}",
+		  data:{"page":page},         
+		  success:function(data){
+			  $("#jobs_table").html(data);    
+			  document.getElementById("two").style.display="block";
+			  
+	        }         
+	 })
+}
+
+</script>
+<script>
+
+
+</script>
+</head>
+<body id="jobs_table">
+
+<div class="flex-container">
+  <header class="header">
+  <img src="{% static 'img/123.jpg' %}" style="height:80px;width:70px;float:left;margin-left:100px;margin-top:10px" alt="Logo">
+  <label style="float:left;margin-left:20px;margin-top:10px;color:#000000">姓名:房永壮</label>
+  <div style="position:Absolute ;border: 1px solid black;  top:70px;left:220px;padding:5px;border-radius: 100px;color:#000000" >艺人状态:正常</div>
+  <div style="position:Absolute ;border: 1px solid black;  top:35px;left:400px;padding:5px;border-radius: 100px;color:#000000" >签约人:张三</div>
+  <div style="position:Absolute ;border: 1px solid black;  top:70px;left:400px;padding:5px;border-radius: 100px;color:#000000" >运营人员:张三</div>
+  <div style="position:Absolute ;border: 1px solid black;  top:40px;left:900px;padding:20px;border-radius: 100px;color:#000000" >发布视频数量:9999</div>
+  <div style="position:Absolute ;border: 1px solid black;  top:40px;left:1200px;padding:20px;border-radius: 100px;color:#000000" >佣金:9999</div>
+  </header>
+  <article class="main">
+  <div class="item button-jittery" style="--bg-color: #f1c40f;">
+    <button id="fabu" style="background: #29F01C;" onclick="fabu()">已完成任务</button>
+    <button id="fabu" style="background: #24DEB9;" onclick="weifabu()">未完成任务</button>
+  </div>  
+    <div id="one" style="display:none; margin-left:20px">
+    <table class=table4_4 id="fubu1">
+      <a href="/look_all?username={{request.session.username}}">目前只能显示前十条最近完成任务，点击查看全部</a>
+    </table>
+    </div>
+    <div id="two" style="display:none; margin-left:20px">
+    <table class=table4_4>
+       <tr>
+          <th>宣传产品</th>
+          <th>剧本详情链接</th>
+          <th>提交时间</th>
+          <th>任务状态</th>
+          <th>上传视频</th>
+          <th>删除操作</th>
+       </tr>
+       {% for i in tasks %}		
+       	   <tr>
+       	      <td>{{ i.pid.name }}</td>
+       	      <td><input style="background-color:#EBF7FD;color:blue;border:0px" type="button" id="{{i.aid.id}}" value="{{i.aid.script_title}}" onclick="adsadssfa(this)"></td>
+       	      <td>{{ i.upload_time }}</td>
+       	      <td>{{ i.task_status }}</td>
+       	      <td><form action="/upload_video" method="post" enctype="multipart/form-data" > 
+       	             <input type="file" alt="默认图示" name="video" id="video">
+       	             <input type="hidden"  name="uploadid"  id="uploadid" value="{{ i.id }}">
+       	             <input type="hidden"  name="uploadname" id="uploadname" value="{{ i.uname }}">
+       	             <input type="hidden"  name="uploadproduct" id="uploadproduct" value="{{ i.pid.name }}">
+       	             <input type="submit"   value="上传"> 
+       	           <!--   <input type="button"  onclick="upvideo()" value="ajax上传文章"> --> 
+       	          </form></td>
+       	      <td><input type="button" id="{{ i.id }}" onclick="deltask(this)" value="删除任务"></td>
+       	   </tr>		
+       {% endfor %}
+    </table>	
+		    <ul class="pagination" style="padding-top:50px">
+		    {% if tasks.has_previous %}
+		   <li class="page-item">
+			       <a class="page-link" onclick='pre()' href="javascript:void(0)">上一页</a>
+		   </li>
+		    {% else %}
+		      <li class="page-item disabled"><span class="page-link">Previous</span></li>
+		    {% endif %}
+		
+		  
+		    {% if tasks.has_next %}
+		    <li class="page-item">
+		 		<a class="page-link" onclick="next()" href="javascript:void(0)" >下一页</a>
+		 	</li>
+		    {% else %}
+		    <li class="page-item disabled"><span class="page-link">end</span></li>
+		    {% endif %}
+		    </ul>
+    </div>
+  </article>
+  <aside class="aside aside2">
+  <div class="item button-jittery" style="--bg-color: #f1c40f;">
+  <input type="hidden" id="user" value="{{username}}">
+      <ul style="list-style-type:none;">
+        <li style="margin-top:100px"><button style="padding:20px;width:200px; background: #F7F50A;" onclick="Get_task()">领取任务</button></li>
+        <li style="margin-top:100px"><button style="padding:20px;width:200px;  background: #E8642C; "onclick="Artist_ranking()">艺人排行</button></li>
+        <li style="margin-top:100px"><button style="padding:20px;width:200px; background: #500DF5;" onclick="sample_video()">样例视频</button></li>
+      </ul>
+     </div>
+  </aside>
+</div>
+ <div id="showdiv" style="width: 80%; margin: 0 auto; height:500px; border: 0px solid #999; display: none; position: absolute; top: 20%; left: 10%; z-index: 3; background: #fff">
+  <input type="button" onclick="closeWindow()" value="关闭">
+    <div style="text-indent: 50px; height: 500px; padding: 0.5rem; line-height: 1rem;color:black;overflow: scroll; "  id="content"></div>
+ </div>
+ 
+ <div id="showdiv1" style="width: 40px; margin: 0 auto; height:25px; border: 1px solid #999; display: none; position: absolute; top: 10%; left: 10%; z-index: 3; background: #fff">   
+<input type="button" onclick="closeWindow1()" value="关闭">
+</div>
+</body>
+</html>
+<!-- 
+function upvideo(){
+	 alert("5646545")
+	var upload_file=$("#video")[0].files[0];
+	 
+	var uploadid=document.getElementById("uploadid").value;  
+	 
+	var uploadname=document.getElementById("uploadname").value;  
+	
+	var uploadproduct=document.getElementById("uploadproduct").value;  
+	
+	var formData=new FormData();                 // 生成FormData对象
+	formData.append("upload_file",upload_file); 
+	formData.append("uploadid",uploadid); 
+    formData.append("uploadname",uploadname); 
+    formData.append("uploadproduct",uploadproduct); 
+	
+	con={
+		"video":upload_file,
+		"uploadid":uploadid,
+		"uploadname":uploadname,
+		"uploadproduct":uploadproduct,			
+	}
+	$.ajax({
+        type:"POST",
+        data: formData,
+        url: "{% url 'upvideo' %}", //后台处理函数的url 这里用的是static url 需要与urls.py中的name一致
+        cache: false,
+        dataType: "json",
+        processData:false,
+        success: function(data){
+        	alert(data["status"])
+        	alert("牛逼")
+        },
+        
+    });
+}
+
+
+ -->

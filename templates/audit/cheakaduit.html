@@ -1,0 +1,175 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+<title>审核日志</title>
+<link rel="stylesheet" type="text/css" href="{% static 'css/normalize.css' %}" /><!--CSS RESET-->
+	<link rel="stylesheet" type="text/css" href="{% static 'css/htmleaf-demo.css' %}"><!--演示页面样式，使用时可以不引用-->
+	<link rel="stylesheet" href="{% static 'css/style2.css' %}">
+	
+	<link rel="stylesheet" type="text/css" href="{% static 'css/style3.css' %}" />
+  	<link rel="stylesheet" type="text/css" href="{% static 'css/basictable.css' %}" />
+	
+<style>
+
+.table4_4 table {
+	width:100%;
+	margin:15px 0;
+	border:0;
+	
+}
+.table4_4 th {
+	background-color:#C3E7FA;
+	color:#000000
+}
+.table4_4,.table4_4 th,.table4_4 td {
+	font-size:0.95em;
+	text-align:center;
+	padding:40px;
+	border-collapse:collapse;
+}
+
+
+.frist{
+ 
+    margin-left: 250px;  
+    padding-top: 100px;  
+}
+</style>
+	
+
+</head>
+<body>
+<div class="htmleaf-container" id="firefly">
+ 
+	<div id="page">
+	 <label style="color:#FFFFFF">审核日志</label>
+	 <label style="color:#FFFFFF;float:right;"><a href="/audit_show?username={{request.session.username}}">返回审核界面</a></label>
+		  <table id="table">
+		    <thead>
+		      <tr>
+		              <th>提交任务人员</th>
+		              <th>提交时间</th>
+		              <th>剧本标题</th>
+		              <th>宣传产品</th>
+		              <th>视频</th>
+		              <th>审核时间</th>
+		              <th>审核状态</th>
+		              <th>操作</th>
+		      </tr>
+		    </thead>
+		    <tbody>
+		      {% for a in approved_memos %}
+		         <tr>
+		             <td>{{ a.tid.uname }}</td>
+		             <td>{{ a.tid.upload_time }}</td>
+		             <td><input style="background-color:#EBF7FD;color:blue;border:0px" type="button" id="{{a.tid.aid.id}}" value="{{ a.tid.aid.script_title }}" onclick="show(this)"></td>
+		             <td>{{ a.tid.pid.name }}</td>
+		             <td><input type="button" id="{{ a.tid.vid }}" onclick="cheakvideo(this)" value="查看视频"></td>
+		             <td>{{ a.audit_time }}</td>
+		             <td>{{ a.tid.task_status }}</td>
+		             <td><input type="button" id="{{a.id}}" onclick="withdraw(this)" value="撤回"></td>
+		         </tr>
+		      {% endfor %}
+		      
+		      
+		    </tbody>
+		  </table>
+   </div>
+</div>
+<div id="showdiv" style="width: 80%; margin: 0 auto; height:600px; border: 1px solid #999; display: none; position: absolute; top: 10%; left: 10%; z-index: 3; background: #fff">
+    <input type="button" onclick="closeWindow()" value="关闭">
+    <div style="text-indent: 50px; height: 3px; font-size: 10px; padding: 5px; line-height:20px;color:black "  id="content"></div>
+   </div>
+<script src="{% static 'js/jquery-1.11.0.min.js' %}" type="text/javascript"></script>
+	<script src="{% static 'js/jquery.firefly-0.7.min.js' %}"></script>
+	<script type="text/javascript">
+		$.firefly({
+		  color: '#fff',
+		  minPixel: 1,
+		  maxPixel: 3,
+		  total : 65,
+		  on: '#firefly',
+		  borderRadius: 50
+		});
+	</script>
+	<script src="{% static 'js/jquery-2.1.1.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/jquery.basictable.min.js' %}"></script>
+	<script type="text/javascript">
+	    $(document).ready(function() {
+	      $('#table').basictable();
+
+	      $('#table-breakpoint').basictable({
+	        breakpoint: 768
+	      });
+
+	      $('#table-swap-axis').basictable({
+	        swapAxis: true
+	      });
+
+	      $('#table-force-off').basictable({
+	        forceResponsive: true
+	      });
+
+	      $('#table-no-resize').basictable({
+	        noResize: true
+	      });
+
+	      $('#table-two-axis').basictable();
+
+	      $('#table-max-height').basictable({
+	        tableWrapper: true
+	      });
+	    });
+	    function withdraw(obj){
+	    	
+	    	if(window.confirm('你确定要撤回吗？')){
+	    	
+	    	var sc_id1 = $(obj).attr('id');
+	    	alert(sc_id1)
+	    	$.ajax({
+	            type:"POST",
+	            data:{"sc_id1":sc_id1},
+	            url: "{% url 'withdraw' %}", //后台处理函数的url 这里用的是static url 需要与urls.py中的name一致
+	            cache: false,
+	            dataType: "json",
+	            success: function(data){
+	            	alert(data["status"]);
+	            	window.location.href="/cheakaduit"; 
+	            },
+	            error: function(data){
+	                alert(data["status"]);
+	            }
+	        });
+	    	}else{
+	    		
+	    	}
+	    }
+	    function show(obj){
+	    	var sc_id1 = $(obj).attr('id');
+	    	$('#showdiv').show();
+	    	$.ajax({
+	            type:"POST",
+	            data: {'sc_id1':sc_id1},
+	            url: "{% url 'check_content' %}", //后台处理函数的url 这里用的是static url 需要与urls.py中的name一致
+	            cache: false,
+	            dataType: "json",
+	            success: function(data){
+	            	 var text ="标题：<label style='color:red'>"+data["script_title"]+"</label>&nbsp;&nbsp;&nbsp;&nbsp;标签："+"<label style='color:red'>"+data["play_age"]+","+data["play_position"]+","+data["play_sex"]+","+data["play_actor_number"]+","+data["play_product_option"] +","+data["play_content"] +","+data["play_script_type"]+"</label>"+"&nbsp;&nbsp;&nbsp;&nbsp;创作时间：<label  style='color:red'>"+data["upload_time"]+"</label>"+ "<br><p>"+data["script_content"]+"</p>";
+	                $("#content").append(text);
+	            },
+	            error: function(data){
+	                alert(data["status"]);
+	            }
+	        });
+	    }
+	    function closeWindow() {
+	        $('#showdiv').hide();   //隐藏弹窗
+	        $('#showdiv .content').html("");    //清空追加的内容
+	        $("#content").empty();
+	    }	
+	  </script>
+</body>
+</html>

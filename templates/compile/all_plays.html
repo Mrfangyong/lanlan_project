@@ -1,0 +1,186 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+<title>剧本</title>
+<link rel="stylesheet" type="text/css" href="{% static 'css/normalize.css' %}" /><!--CSS RESET-->
+	<link rel="stylesheet" type="text/css" href="{% static 'css/htmleaf-demo.css' %}"><!--演示页面样式，使用时可以不引用-->
+	<link rel="stylesheet" href="{% static 'css/style2.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/style3.css' %}" />
+  	<link rel="stylesheet" type="text/css" href="{% static 'css/basictable.css' %}" />
+  	
+  	<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+	
+<style>
+
+.table4_4 table {
+	width:100%;
+	margin:15px 0;
+	border:0;
+	
+}
+.table4_4 th {
+	background-color:#C3E7FA;
+	color:#000000
+}
+.table4_4,.table4_4 th,.table4_4 td {
+	font-size:0.95em;
+	text-align:center;
+	padding:40px;
+	border-collapse:collapse;
+}
+.frist{
+ 
+    margin-left: 250px;  
+    padding-top: 100px;  
+}
+</style>
+<script>
+function adsadssfa(obj){
+	var sc_id1 = $(obj).attr('id');
+	$('#showdiv').show();
+	$.ajax({
+        type:"POST",
+        data: {'sc_id1':sc_id1},
+        url: "{% url 'check_content' %}", //后台处理函数的url 这里用的是static url 需要与urls.py中的name一致
+        cache: false,
+        dataType: "json",
+        success: function(data){
+        	 var text ="标题：<label style='color:red'>"+data["script_title"]+"</label>&nbsp;&nbsp;&nbsp;&nbsp;标签："+"<label style='color:red'>"+data["play_age"]+","+data["play_position"]+","+data["play_sex"]+","+data["play_actor_number"]+","+data["play_product_option"] +","+data["play_content"] +","+data["play_script_type"]+"</label>"+"&nbsp;&nbsp;&nbsp;&nbsp;创作时间：<label  style='color:red'>"+data["upload_time"]+"</label>"+ "<br><br><br><p style='font-size:2px'>"+data["script_content"]+"</p>";
+            $("#content").append(text);
+        },
+        error: function(data){
+            alert(data["status"]);
+        }
+    });
+}
+function closeWindow() {
+    $('#showdiv').hide();   //隐藏弹窗
+    $('#showdiv .content').html("");    //清空追加的内容
+    $("#content").empty();
+}
+function  next(){
+	{% if plays.has_next %}
+    page={{ plays.next_page_number }};
+    {% endif %}
+    $.ajax({
+    	type:"POST",
+    	url:"{% url 'look_all_compile' %}",
+    	data:{"page":page},        
+    	success:function(data){
+    		$("#jobs_table").html(data);  
+         }
+    })
+}
+function pre(){
+	 {% if plays.has_previous %}
+	   page={{ plays.previous_page_number }};
+	　{% endif %}
+	  $.ajax({
+		  type:"POST",
+		  url:"{% url 'look_all_compile' %}",
+		  data:{"page":page},         
+		  success:function(data){
+			  $("#jobs_table").html(data);    
+	        }         
+	 })
+}
+</script>
+
+</head>
+<body id="jobs_table">
+<div class="htmleaf-container" id="firefly">
+
+	<div id="page">
+	<label style="color:#FFFFFF">全部剧本</label>
+	<label style="color:#FFFFFF;float:right;"><a href="/compile_show?compilename={{request.session.compilename}}">返回我的主页</a></label>
+		  <table id="table">
+		    <thead>
+		      <tr>
+		        <th>剧本标题</th>
+		        <th>上传时间</th>
+		        <th>使用次数</th>
+		      </tr>
+		    </thead>
+		    <tbody>
+		      {% for p in plays %}
+		        <tr>
+		          <td><input style="background-color:#EBF7FD;color:blue;border:0px" type="button" id="{{p.id}}" value="{{p.script_title}}" onclick="adsadssfa(this)"></td>
+		          <td>{{ p.upload_time }}</td>
+		          <td>{{ p.Script_usage }}</td>
+		        </tr>
+		      {% endfor %}
+		    </tbody>
+		  </table>
+		  <ul class="pagination" style="padding-top:50px">
+		    {% if plays.has_previous %}
+		   <li class="page-item">
+			       <a class="page-link" onclick='pre()' href="javascript:void(0)">上一页</a>
+		   </li>
+		    {% else %}
+		      <li class="page-item disabled"><span class="page-link">Previous</span></li>
+		    {% endif %}
+		    {% if plays.has_next %}
+		    <li class="page-item">
+		 		<a class="page-link" onclick="next()" href="javascript:void(0)" >下一页</a>
+		 	</li>
+		    {% else %}
+		    <li class="page-item disabled"><span class="page-link">end</span></li>
+		    {% endif %}
+		</ul>
+   </div>
+</div>
+ <div id="showdiv" style="width: 80%; margin: 0 auto; height:500px; border: 0px solid #999; display: none; position: absolute; top: 20%; left: 10%; z-index: 3; background: #fff">
+  <input type="button" onclick="closeWindow()" value="关闭">
+    <div style="text-indent: 50px; height: 500px; padding: 0.5rem; line-height: 1rem;color:black;overflow: scroll; "  id="content"></div>
+ </div>
+<script src="{% static 'js/jquery-1.11.0.min.js' %}" type="text/javascript"></script>
+	<script src="{% static 'js/jquery.firefly-0.7.min.js' %}"></script>
+	<script type="text/javascript">
+		$.firefly({
+		  color: '#fff',
+		  minPixel: 1,
+		  maxPixel: 3,
+		  total : 65,
+		  on: '#firefly',
+		  borderRadius: 50
+		});
+	</script>
+	<script src="{% static 'js/jquery-2.1.1.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/jquery.basictable.min.js' %}"></script>
+	<script type="text/javascript">
+	    $(document).ready(function() {
+	      $('#table').basictable();
+
+	      $('#table-breakpoint').basictable({
+	        breakpoint: 768
+	      });
+
+	      $('#table-swap-axis').basictable({
+	        swapAxis: true
+	      });
+
+	      $('#table-force-off').basictable({
+	        forceResponsive: true
+	      });
+
+	      $('#table-no-resize').basictable({
+	        noResize: true
+	      });
+
+	      $('#table-two-axis').basictable();
+
+	      $('#table-max-height').basictable({
+	        tableWrapper: true
+	      });
+	    });
+	  </script>
+</body>
+</html>
+
+

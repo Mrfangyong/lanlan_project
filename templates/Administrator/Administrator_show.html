@@ -1,0 +1,278 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+<title>管理界面</title>
+<link rel="stylesheet" type="text/css" href="{% static 'css/normalize.css' %}" /><!--CSS RESET-->
+	<link rel="stylesheet" type="text/css" href="{% static 'css/htmleaf-demo.css' %}"><!--演示页面样式，使用时可以不引用-->
+	<link rel="stylesheet" href="{% static 'css/style2.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/style3.css' %}" />
+  	<link rel="stylesheet" type="text/css" href="{% static 'css/basictable.css' %}" />
+	
+<style>
+
+.table4_4 table {
+	width:100%;
+	margin:15px 0;
+	border:0;
+	
+}
+.table4_4 th {
+	background-color:#C3E7FA;
+	color:#000000
+}
+.table4_4,.table4_4 th,.table4_4 td {
+	font-size:0.95em;
+	text-align:center;
+	padding:40px;
+	border-collapse:collapse;
+}
+.frist{
+ 
+    margin-left: 250px;  
+    padding-top: 100px;  
+}
+
+.signWrap {
+        display: none;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 0;
+        width: 70%;
+        height: 50%;
+       
+    }
+    .sign {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 350px;
+        height: 250px;
+        margin: -1100/2/75rem 0 0  -1700/2/75rem;
+        background: #fff;
+    }
+
+</style>
+	
+
+</head>
+<body>
+<div class="htmleaf-container" id="firefly">
+
+	<div id="page">
+	<label style="color:#FFFFFF">管理界面</label>
+	<label style="color:#FFFFFF;float:right;margin-left:2px"><a href="{% url 'Goods_upload' %}" style="display: block;width: 200px;height:40px;color: #fff;background: lightblue;text-align: center;line-height: 40px;margin:0 auto;">联盟商品上传</a></label>
+<label style="color:#FFFFFF;float:right;margin-left:2px"><a href="javascript:showSign();" style="display: block;width: 200px;height:40px;color: #fff;background: lightblue;text-align: center;line-height: 40px;margin:0 auto;">新增</a></label>
+<label style="color:#FFFFFF;float:right;margin-left:2px"><a href="{% url 'bootstrapTable' %}" style="display: block;width: 200px;height:40px;color: #fff;background: lightblue;text-align: center;line-height: 40px;margin:0 auto;">直播选款</a></label>
+<label style="color:#FFFFFF;float:right;margin-left:2px"><a href="{% url 'look_manifest' %}" style="display: block;width: 200px;height:40px;color: #fff;background: lightblue;text-align: center;line-height: 40px;margin:0 auto;">查看订单数据</a></label>
+
+<br>
+		  <table id="table">
+		    <thead>
+		      <tr>
+		        <th>name</th>
+		        <th>role</th>
+		        <th>操作</th>
+		      </tr>
+		    </thead>
+		    <tbody>
+		      {% for u in users %}
+		          <tr>
+		             <td>{{u.name}}</td>
+		             <td>{{u.role_type}}</td>
+		             <td><input type="button" id="{{u.id}}" onclick="View_details(this)" value="查看详细信息">
+		             <input type="button" id="{{u.id}}" onclick="del(this)" value="删除"></td>
+
+		    
+		          </tr>
+		      {% endfor %}
+		      
+		      
+		    </tbody>
+		  </table>
+		  
+   </div>
+
+</div>
+
+<div class="signWrap">
+	<div class="sign">
+		<a class="signClose" href="javascript:showSign();">点击关闭</a><br>
+		<form method="post" action="#">
+        <p>
+            <label for="name">用户名</label> 
+            <input type="text" id="name" placeholder="请设置用户" />  
+        </p>
+        <p>
+            <label for="tel">手机号</label>
+            <input type="text" id="tel" placeholder="可用于登录和找回密码" />
+        </p>
+        <p>
+            <label for="psw">密码</label>
+            &nbsp;&nbsp;&nbsp;<input type="password" id="psw" placeholder="请设置密码" />
+        </p>
+        <p>
+            <label for="role">角色</label>
+            &nbsp;&nbsp;&nbsp;<select id="role">
+               <option>actor</option>
+               <option value="scriptwriter">scriptwriter</option>
+               <option value="audit">audit</option>
+            </select>
+        </p>
+        <p>
+             <label for="status">状态</label>
+             &nbsp;&nbsp;&nbsp;<select id="status">
+               <option value="normal">normal</option>
+               <option value="no_normal">no_normal</option>
+            </select>
+        </p>
+
+        <p class="add">
+            <input type="button"  onclick="add()" value="新增" >
+        </p>
+    	</form>
+	</div>
+</div>
+
+<script src="{% static 'js/jquery-1.11.0.min.js' %}" type="text/javascript"></script>
+	<script src="{% static 'js/jquery.firefly-0.7.min.js' %}"></script>
+	<script type="text/javascript">
+		$.firefly({
+		  color: '#fff',
+		  minPixel: 1,
+		  maxPixel: 3,
+		  total : 65,
+		  on: '#firefly',
+		  borderRadius: 50
+		});
+	</script>
+	<script src="{% static 'js/jquery-2.1.1.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/jquery.basictable.min.js' %}"></script>
+	<script type="text/javascript">
+	    $(document).ready(function() {
+	      $('#table').basictable();
+
+	      $('#table-breakpoint').basictable({
+	        breakpoint: 768
+	      });
+
+	      $('#table-swap-axis').basictable({
+	        swapAxis: true
+	      });
+
+	      $('#table-force-off').basictable({
+	        forceResponsive: true
+	      });
+
+	      $('#table-no-resize').basictable({
+	        noResize: true
+	      });
+
+	      $('#table-two-axis').basictable();
+
+	      $('#table-max-height').basictable({
+	        tableWrapper: true
+	      });
+	    });
+	    function showSign(){
+      		  $(".signWrap").toggle();
+        }
+        function add(){
+            if(window.confirm('你确定要提交吗？')){
+	            var username=document.getElementById("name").value;
+	            var tel=document.getElementById("tel").value;
+	            var psw=document.getElementById("psw").value;
+	            var role=document.getElementById("role").value;
+	            var status=document.getElementById("status").value;
+	            if (username == '' || username == undefined || username == null){
+	               alert("名字不能为空！！！")
+	            }else{
+	              if (psw == '' || psw == undefined || psw == null){
+		                alert("密码不能为空，请检查！！")
+		            }else{
+			            con={
+		                "username":username,
+		                "tel":tel,
+		                "psw":psw,
+		                "role":role,
+		                "status":status,
+			            };
+			            $.ajax({
+			            	type:"POST",
+			            	data:con,
+			            	url: "{% url 'add_user' %}",
+			            	cache: false,
+				            dataType: "json",
+				            success: function(data){
+				              alert(data["status"])
+				              window.location.href="/Administrator_show?username={{ request.session.username }}";
+				            },
+			             });
+	               }
+		            
+	            }
+	            }else{
+	            
+	            }
+	            
+            
+        }
+        function del(obj){
+        if(window.confirm('你确定要删除吗？')){
+        var sc_id1 = $(obj).attr('id')
+            $.ajax({
+            	type:"POST",
+            	data:{"sc_id1":sc_id1},
+            	url: "{% url 'del_user' %}",
+            	cache: false,
+	            dataType: "json",
+	            success: function(data){
+	              alert(data["status"])
+	              window.location.href="/Administrator_show?username={{ request.session.username }}";
+	            },
+            });
+        
+        }else{
+        }
+            
+        }
+	    function View_details(obj){
+	    	var sc_id1 = $(obj).attr('id')
+	    	$.ajax({
+	            type:"POST",
+	            data:{"sc_id1":sc_id1},
+	            url: "{% url 'Acquire_role' %}", //后台处理函数的url 这里用的是static url 需要与urls.py中的name一致
+	            cache: false,
+	            dataType: "json",
+	            success: function(data){
+	            	alert(data["status"])
+	            	if (data["status"]=="scriptwriter"){
+	            		alert(data["sc_id"])
+	            		alert("编剧")
+	            		window.location.href="/scriptwriter_manage?id="+data["sc_id"]+"&role=scriptwriter";
+	            	}else if(data["status"]=="actor"){
+	            		alert(data["sc_id"])
+	            		alert("演员")
+	            		window.location.href="/actor_manage?id="+data["sc_id"]+"&role=actor";
+	            	}else if(data["status"]=="audit"){
+	            		alert(data["sc_id"])
+	            		alert("审核")
+	            		window.location.href="/manage_audit?id="+data["sc_id"]+"&role=audit";
+	            	}
+	            },
+	            error: function(data){
+	                alert(data["status"]);
+	            }
+	        });
+	    	
+	    }
+	  </script>
+</body>
+</html>
+
+

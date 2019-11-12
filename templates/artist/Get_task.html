@@ -1,0 +1,244 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" type="text/css" href="{% static 'css/normalize.css' %}" /><!--CSS RESET-->
+	<link rel="stylesheet" type="text/css" href="{% static 'css/htmleaf-demo.css' %}"><!--演示页面样式，使用时可以不引用-->
+	<link rel="stylesheet" href="{% static 'css/style2.css' %}">
+	
+	
+	<link rel="stylesheet" type="text/css" href="{% static 'css/style3.css' %}" />
+  	<link rel="stylesheet" type="text/css" href="{% static 'css/basictable.css' %}" />
+	
+	<link href="{% static 'css/select-mania.css' %}" rel="stylesheet" type="text/css">
+	<link href="{% static 'css/select-mania-theme-green.css' %}" rel="stylesheet" type="text/css">
+
+	<style type="text/css">
+		.container { max-width:150px; float:left}
+		.container1 {margin-left:20px; max-width:150px; float:left}
+		.container2 {margin-left:20px; max-width:150px; float:left}
+		.container3 {margin-left:20px; max-width:150px; float:left}
+	</style>
+<style>
+        .content {
+            width: 300px;
+            height: 300px;
+            margin:0px auto;
+            padding-top:100px;
+            }
+    </style>
+    <script src="http://cdn.bootcss.com/jquery/1.11.0/jquery.min.js" type="text/javascript"></script>
+<script>
+function pick_on(){
+	var v = document.getElementById("option").value;
+	alert(v)
+}
+function next(){
+	style="display: none;"
+	document.getElementById("second").style.display="";
+	document.getElementById("frist").style.display="none";
+	
+	
+	
+}
+
+</script>
+
+</head>
+<body>
+<div class="htmleaf-container" id="firefly">
+<div class="content" id="frist">
+        
+		<label style="padding-left:70px">
+		 *** 视频发布第一步 ***
+		 <a href="/get_play">跳过</a>
+		</label>
+		
+		<br>
+		   <select id="option" style="margin-left:80px;margin-top:20px;background-color:blue">
+		   <option>-请选择种类-</option>
+		      <option>衬衫</option>
+		      <option>上衣</option>
+		      <option>内衣</option>
+		      <option>玩具</option>
+		      <option>家具</option>
+		   </select>
+		   <input style="background-color:#1561;color:blue;border:0px" type="button" value="选中查看" onclick="pick_on()">
+		   <p>图片实例：</p>
+		   <span></span>
+		   <input style="margin-left:250px;background: transparent;border:0px;color:blue" type="button" onclick="next()"  value="下一步">
+</div>
+
+<div id="second" style="display:none;">
+
+
+<div id="page">     
+<label>剧本选择</label>
+<label style="color:#FFFFFF;float:right;"><a href="/artist_show">返回我的主页</a></label><br>
+        <div class="container">
+			<select class="demo-1" id="age">
+			{% for i in ages %}
+			 <option value="{{ i.id }}">{{ i.age_section }}</option>
+			{% endfor %}
+			</select>
+		</div>
+		<div class="container">
+			<select class="demo-1" id="Position">
+			{% for i in positions %}
+			 <option value="{{ i.id }}">{{ i.Position_type }}</option>
+			{% endfor %}
+			</select>
+		</div>
+
+		<div class="container">
+			<select class="demo-1" id="sex">
+			{% for i in sexs %}
+			 <option value="{{ i.id }}">{{ i.sex_option }}</option>
+			{% endfor %}
+			</select>
+		</div>
+		<div class="container">
+			<select class="demo-1" id="actor_numbers">
+			{% for i in actor_numbers %}
+			 <option value="{{ i.id }}">{{ i.actor_numbers }}</option>
+			{% endfor %}
+			</select>
+		</div>
+		<div class="container">
+			<select class="demo-1" id="product_options">
+			{% for i in product_options %}
+			 <option value="{{ i.id }}">{{ i.product_options }}</option>
+			{% endfor %}
+			</select>
+		</div>
+		<div class="container">
+			<select class="demo-1" id="content_type">
+			{% for i in contents %}
+			 <option value="{{ i.id }}">{{ i.content_type }}</option>
+			{% endfor %}
+			</select>
+		</div>
+		<div class="container">
+			<select class="demo-1" id="script_types">
+			{% for i in script_types %}
+			 <option value="{{ i.id }}">{{ i.script_types }}</option>
+			{% endfor %}
+			</select>
+		</div>
+		<input style="margin-left:20px;margin-top:10px" type="button" onclick="search()" value="点击搜索">
+	<script src="http://cdn.bootcss.com/jquery/1.11.0/jquery.min.js" type="text/javascript"></script>
+	<script type="text/javascript" src="{% static 'js/select-mania.js' %}"></script>
+	<script type="text/javascript">
+
+		$('.demo-1').selectMania({
+		    themes: ['green'], 
+		    placeholder: 'Please select me!'
+		});
+
+	</script>
+     <table id="table">
+		    <thead>
+		      <tr>
+		        <th>剧本名称</th>
+		        <th>剧本描述</th>
+		        <th>创作人</th>
+		        <th>剧本上传时间</th>
+		        <th>剧本使用次数</th>
+		        <th>操作</th>
+		      </tr>
+		    </thead>
+		    <tbody>
+		    {% for p in page %}
+		      <tr>
+		        <td>{{ p.script_title }}</td>
+		        <td>{{ p.play_age.age_section }},{{ p.play_position.Position_type }},{{ p.play_sex.sex_option }},{{ p.play_actor_number.actor_numbers }},{{ p.play_product_option.product_options }},{{ p.play_content.content_type }},{{ p.play_script_type.script_types }},
+</td> 
+		        <td>{{ p.author }}</td>
+		        <td>{{ p.upload_time }}</td>
+		        <td>{{ p.Script_usage }}</td>
+		        <td><input type="button" onclick="use()" value="使用该剧本"></td>
+		      </tr>
+		      {% endfor %}
+		    </tbody>
+		  </table>
+<ul class="pagination"> 
+{# 如果当前页还有上一页 #} 
+
+{% if page.has_previous %} 
+<li><a href="?index={{page.previous_page_number}}">上一页</a></li> 
+{% else %} 
+<li class="disabled"> <a href="#">上一页</a> </li> 
+{% endif %} 
+{% for page_number in paginator.page_range %} 
+{# 获取当前页的页码 #} 
+{% if page_number == page.number %} 
+
+{# 如果是当前页的话，选中 #}
+ <li class="active"> <a href="?index={{page_number}}">{{page_number}}</a> </li> 
+ {% else %} 
+ <li> <a href="?index={{page_number}}">{{page_number}}</a> </li> 
+ {% endif %} 
+ {% endfor %} 
+ 
+ {% if page.has_next %} 
+ <li> <a href="?index={{page.next_page_number}}">下一页</a> </li> 
+ {% else %}
+ 
+ <li class="disabled"> <a href="#">下一页</a> </li> 
+ {% endif %} 
+ 
+ </ul> 
+		  <script src="{% static 'js/jquery-2.1.1.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/jquery.basictable.min.js' %}"></script>
+	<script type="text/javascript">
+	    $(document).ready(function() {
+	      $('#table').basictable();
+
+	      $('#table-breakpoint').basictable({
+	        breakpoint: 768
+	      });
+
+	      $('#table-swap-axis').basictable({
+	        swapAxis: true
+	      });
+
+	      $('#table-force-off').basictable({
+	        forceResponsive: true
+	      });
+
+	      $('#table-no-resize').basictable({
+	        noResize: true
+	      });
+
+	      $('#table-two-axis').basictable();
+
+	      $('#table-max-height').basictable({
+	        tableWrapper: true
+	      });
+	    });
+	    function use(){
+	    	alert("您已经使用该剧本，请返回主页，尽快上传视频")	
+	    }
+	  </script>
+</div>
+</div>
+
+
+</div>
+<script src="{% static 'js/jquery-1.11.0.min.js' %}" type="text/javascript"></script>
+	<script src="{% static 'js/jquery.firefly-0.7.min.js' %}"></script>
+	<script type="text/javascript">
+		$.firefly({
+		  color: '#fff',
+		  minPixel: 1,
+		  maxPixel: 3,
+		  total : 65,
+		  on: '#firefly',
+		  borderRadius: 50
+		});
+	</script>
+
+</body>
+</html>

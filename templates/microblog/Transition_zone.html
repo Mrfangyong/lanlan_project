@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+ <title>大淘客链接转换专区</title>
+ <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<style>
+ .top{
+     width：100%;
+     background-color: #353C44;
+     height:40px;
+     border-radius:5px;
+  }
+</style>
+
+
+</head>
+
+<body>
+<div class="top">
+   <span style="color:#FFFFFF; margin-left:50px;" >大淘客链接转换专区</span>
+         <a href="javascript:back_home();" style="float:right;width: 200px;height:40px;color: #fff;background: lightblue;text-align: center;line-height: 40px;text-decoration:none" >返回主页</a>
+
+   
+</div>
+<div style="float:left">
+<h3 style="color:red">请先选择推广平台(必填):</h3>
+<select id='exclusive' style="width:100%;height:50px"">
+<option value=''>选中平台</option> 
+		{% for i in tbaok_anzones %}
+		<option value='{{ i.account_name }} {{ i.adzone_id }}'>
+		{{ i.adzone_name }} {{ i.adzone_id }}</option> 
+		{% endfor %}
+</select>
+</div>
+<div style="float:left;margin-left:20px;width:300px;">
+<h3 style="color:red">请输入大淘客商品ID(必填):</h3>
+<input type="text" id="good_id" style="width:100%;height:44px;" class="codding" placeholder="例如：649849454">
+</div>
+<button  type="button" style="color:#FFFFFF;background-color:#5BC0DE;border-radius:5px;height:50px;margin-top:60px;margin-left:20px"  onclick="check456()" >点击确定</button>
+
+<pre id="content" style="width:30%">
+
+
+</pre>
+
+
+
+<script>
+function check456(){
+	
+	
+	var exclusive = document.getElementById("exclusive").value;
+	var good_id = document.getElementById("good_id").value;
+	if (exclusive == '' || exclusive == undefined || exclusive == null){
+        alert('请选择推广平台！！！')
+    }else if (good_id == '' || good_id == undefined || good_id == null){
+    	alert('请输入大淘宝ID！！！')
+    }else{
+    	alert(exclusive)
+    	alert(good_id)
+    	$.ajax({ 
+            type:"POST",  
+            data: {'exclusive':exclusive,"good_id":good_id,},
+            url: "{% url 'guest_links' %}", //后台处理函数的url 这里用的是static url 需要与urls.py中的name一致
+            cache: false,
+            dataType: "json",
+            success: function(data){
+            	$("#content").empty();
+        		$("#content").append(data["status"]);	
+                
+            }
+           });        
+    }
+
+}
+function back_home(){
+	username="{{ username }}"
+	window.location.href="/microblog_user_show?username={{ username }}";
+}
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,527 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8">
+ <title>我的主页</title>
+ <link rel="stylesheet" href="{% static 'css/htmleaf-demo1.css' %}">
+ 	
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+<style> 
+body{
+background-color:#EAE8E8
+}
+.flex-container {
+    display: -webkit-flex;
+    display: flex;  
+    -webkit-flex-flow: row wrap;
+    flex-flow: row wrap;
+    font-weight: bold;
+    text-align: center;
+    background-color:#EAE8E8
+}
+
+.flex-container > * {
+    padding: 0px;
+    flex: 1 100%;
+}
+
+.main {
+    text-align: left;
+    background-color: #FFFFFF;
+    height:700px;
+    margin-top:20px;
+    margin-left:20px;
+}
+
+.header {background: #FFFFFF;height:100px;width:80%; margin-top:10px;}
+.aside2 {background:  #FFFFFF;margin-top:20px;margin-left:20px}
+
+@media all and (min-width: 600px) {
+    .aside { flex: 1 auto; }
+}
+
+@media all and (min-width: 800px) {
+    .main    { flex: 3 0px; }
+    .main    { order: 2; }
+    .aside2 { order: 3; }
+}
+#fabu{
+    background-color:bule;
+	display: inline-block;
+	outline: none;
+	cursor: pointer;
+	text-align: center;
+	text-decoration: none;
+	
+	font: 16px/100% 'Microsoft yahei',Arial, Helvetica, sans-serif;
+	padding: .5em 2em .55em;
+	text-shadow: 0 1px 1px rgba(0,0,0,.3);
+	-webkit-border-radius: .5em; 
+	-moz-border-radius: .5em;
+	border-radius: .5em;
+	-webkit-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+	-moz-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+	box-shadow: 0 1px 2px rgba(0,0,0,.2);
+	margin-left:20px;
+	margin-top:10px;
+}
+.table4_4 {
+margin-left:25px;
+margin-top:50px;
+}
+.table4_4 table {
+	width:100%;
+	margin:15px 0;
+	border:0;
+}
+.table4_4 th {
+	background-color:#C3E7FA;
+	color:#000000
+}
+.table4_4,.table4_4 th,.table4_4 td {
+	color:#000000;
+	font-size:0.95em;
+	text-align:center;
+	padding:15px;
+	border-collapse:collapse;
+}
+.table4_4 th,.table4_4 td {
+	border: 1px solid #dcf1fc;
+	border-width:1px 0 1px 0
+}
+.table4_4 tr {
+	border: 1px solid #dcf1fc;
+}
+.table4_4 tr:nth-child(odd){
+	background-color:#ebf7fd;
+}
+.table4_4 tr:nth-child(even){
+	background-color:#fdfdfd;
+}
+button {
+		  
+		  color: #fff;
+		  border: 3px solid #fff;
+		  border-radius: 50px;
+		  padding: 0.8rem 2rem;
+		  font: 24px "Margarine", sans-serif;
+		  outline: none;
+		  cursor: pointer;
+		  position: relative;
+		  transition: 0.2s ease-in-out;
+		  letter-spacing: 2px;
+		}
+@keyframes rainbow {
+		  0% {
+		    background: #1abc9c;
+		  }
+		  10% {
+		    background: #2ecc71;
+		  }
+		  20% {
+		    background: #3498db;
+		  }
+		  30% {
+		    background: #9b59b6;
+		  }
+		  40% {
+		    background: #e74c3c;
+		  }
+		  50% {
+		    background: #e67e22;
+		  }
+		  60% {
+		    background: #f1c40f;
+		  }
+		  70% {
+		    background: #2c3e50;
+		  }
+		  80% {
+		    background: #9b59b6;
+		  }
+		}
+		.button-jittery button {
+		  animation: jittery 4s infinite;
+		}
+		.button-jittery button:hover {
+		  animation: heartbeat 0.2s infinite;
+		}
+
+
+		@keyframes heartbeat {
+		  50% {
+		    transform: scale(1.1);
+		  }
+		}
+		
+		.signWrap {
+        display: none;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 0;
+        width: 70%;
+        height: 50%;
+       
+    }
+    .sign {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 350px;
+        height: 250px;
+        margin: -1100/2/75rem 0 0  -1700/2/75rem;
+        background: #fff;
+    }
+		
+</style>
+<script src="http://cdn.bootcss.com/jquery/1.11.0/jquery.min.js" type="text/javascript"></script>
+
+
+<script>
+
+
+
+
+choose_product = function (){  
+    window.location.href="/choose_product?username={{ username }}"; 
+} 
+
+function showSign(){
+	  $(".signWrap").toggle();
+}
+function add(){
+    if(window.confirm('你确定要提交吗？')){
+        var username=document.getElementById("name").value;
+        var platform=document.getElementById("platform").value;
+        if (username == '' || username == undefined || username == null){
+           alert("平台名不能为空！！！")
+           
+        }else{
+          if (platform == '' || platform == undefined || platform == null){
+                alert("平台账号不能为空，请检查！！")
+           }else if(platform.length>5){
+        	    alert("平台账号长度不能超过五个字符")
+           }
+           else{
+	            con={
+                "username":username,
+                "platform":platform,
+	            };
+	            $.ajax({
+	            	type:"POST",
+	            	data:con,
+	            	url: "{% url 'add_platform_user' %}",
+	            	cache: false,
+		            dataType: "json",
+		            success: function(data){
+		              window.location.href="/microblog_user_show?username={{ request.session.username }}";
+		            },
+	             });
+           }
+            
+        }
+        }else{
+        
+        }
+        
+    
+}
+
+next = function (){  
+
+	{% if rows.has_next %}
+    page={{ rows.next_page_number }};
+    {% endif %}
+    $.ajax({
+    	type:"POST",
+    	url:"{% url 'microblog_user_show' %}",
+    	data:{"page":page,"username":"{{ username }}"},        
+    	success:function(data){
+    		$("#jobs_table").html(data);  
+    		document.getElementById("two").style.display="block";
+         }
+    })
+}
+pre = function (){  
+
+	 {% if rows.has_previous %}
+	   page={{ rows.previous_page_number }};
+	 {% endif %}
+	  $.ajax({
+		  type:"POST",
+		  url:"{% url 'microblog_user_show' %}",
+		  data:{"page":page,"username":"{{ username }}"},         
+		  success:function(data){
+			  $("#jobs_table").html(data);    
+			  document.getElementById("two").style.display="block";
+			  
+	        }         
+	 })
+}
+
+next1 = function (){  
+    
+	{% if rows1.has_next %}
+    page={{ rows1.next_page_number }};
+    {% endif %}
+    
+    $.ajax({
+    	type:"POST",
+    	url:"{% url 'microblog_user_show' %}",
+    	data:{"page1":page,"username":"{{ username }}"},        
+    	success:function(data){
+    		$("#jobs_table").html(data);  
+    		$("#two").empty();
+    		document.getElementById("one").style.display="block";
+
+         }
+    })
+}
+pre1 = function (){  
+
+	 {% if rows1.has_previous %}
+	   page={{ rows1.previous_page_number }};
+	　{% endif %}
+	  $.ajax({
+		  type:"POST",
+		  url:"{% url 'microblog_user_show' %}",
+		  data:{"page":page,"username":"{{ username }}"},         
+		  success:function(data){
+			  $("#jobs_table").html(data);   
+			  $("#two").empty();
+			  document.getElementById("one").style.display="block";
+			  
+	        }         
+	 })
+}
+
+function promotion(){
+	
+		$.ajax({
+	       	type:"POST",
+	       	data:{"username":"{{username}}"},
+	       	url: "{% url 'get_promotion' %}",
+	       	cache: false,
+	        dataType: "json",
+	        success: function(data){
+	        	$("#content").empty();
+	            $('#showdiv .content').html(""); 
+	        	file="<table class='table table-hover'><thead><tr><th>推广位名称</th><th>pid</th><th>账号名称</th><th>审核状态</th></tr></thead><tbody>"
+	        	for (var i = 0; i < data["tbaoks"].length; i++){
+	        		file+="<tr><td>"+data["tbaoks"][i][0]+"</td><td>"+data["tbaoks"][i][1]+"</td><td>"+data["tbaoks"][i][2]+"</td><td>"+data["tbaoks"][i][3]+"<td></tr>";
+	        			
+	        	}
+	        	file+="</tbody></table>"
+	        	$("#content").append(file);	
+	  	        $('#showdiv').show();
+	  	      
+	           },
+	        });
+
+	
+}
+</script>
+<script>
+
+
+
+</script>
+</head>
+<body id="jobs_table">
+
+<div class="flex-container">
+  <div class="header">
+	  <img src="{% static 'img/123.jpg' %}" style="height:80px;width:70px;float:left;margin-left:100px;margin-top:10px" alt="Logo">
+	  <label style="float:left;margin-left:20px;margin-top:10px;color:#000000">姓名:{{ username }}</label>
+	  <span style='float:left;border: 1px solid black;  margin-top:20px;margin-left:10px;marigin-left:10px;border-radius: 100px;color:#000000"     '>状态:正常</span>
+	  <span style="float:left;border: 1px solid black;  margin-top:20px;margin-left:10px;border-radius: 100px;color:#000000" >签约人:张三</span>
+	  <span style="float:left;border: 1px solid black;  margin-top:20px;margin-left:10px;border-radius: 100px;color:#000000" >运营人员:张三</span>
+	  <span style="float:left;border: 1px solid black;  margin-top:20px;margin-left:10px;border-radius: 100px;color:#000000" >发布视频数量:9999</span>
+	  <span style="float:left;border: 1px solid black;  margin-top:20px;margin-left:10px;border-radius: 100px;color:#000000" >佣金:9999</span>
+	  <a href="javascript:showSign();" style="float:left;width: 200px;height:40px;color: #fff;margin-top:20px;margin-left:10px;background: lightblue;text-align: center;line-height: 40px;">新增我的推广渠道</a>
+      <a href="javascript:promotion();" style="float:left;width: 200px;height:40px;color: #fff;margin-top:20px;margin-left:10px;background: lightblue;text-align: center;line-height: 40px;" id="bigDiv">查看我的推广渠道</a>
+      <a href="javascript:choose_product();" style="float:left;width: 200px;height:40px;color: #fff;margin-top:20px;margin-left:10px;background: lightblue;text-align: center;line-height: 40px;" >选取产品</a>
+
+  
+  </div>
+  <article class="main">
+   <div class="item button-jittery" style="--bg-color: #f1c40f;">
+    <button id="fabu" style="background: #29F01C;" onclick="fabu()">已推广产品</button>
+    <button id="fabu" style="background: #24DEB9;" onclick="weifabu()">订单详细数据</button>
+  </div>  
+  <div id="one" class="container"  style="display:none;">
+  
+
+  
+  
+     <table class="table table-hover">
+      <thead>
+            <tr>
+                <th>推广时间</th>
+                <th>推广商品链接</th>
+                <th>生成的链接</th>
+            </tr>
+        </thead>
+       
+        <tbody>
+               
+           {% for k in rows1 %}
+             <tr>
+                <td>{{ k.request_time }}</td>
+                <td><a target="_blank" href="{{ k.my_tb_link }}" >推广商品</a></td>
+                <td><input type="button" value="查看生成的链接" id="{{ k.my_tb_link }}" onclick="already(this)"></td>
+              </tr>
+           {% endfor %} 
+        </tbody>
+       </table>
+      <ul class="pagination" style="padding-top:50px">
+			    {% if rows1.has_previous %}
+			   <li class="page-item">
+				       <a class="page-link" onclick='pre1()' href="javascript:void(0)">上一页</a>
+			   </li>
+			    {% else %}
+			      <li class="page-item disabled"><span class="page-link">Previous</span></li>
+			    {% endif %}
+			
+			  
+			    {% if rows1.has_next %}
+			    <li class="page-item">
+			 		<a class="page-link" onclick="next1()" href="javascript:void(0)" >下一页</a>
+			 	</li>
+			    {% else %}
+			    <li class="page-item disabled"><span class="page-link">end</span></li>
+			    {% endif %}
+			</ul>         
+  </div>
+   <div class="container" id="two"  >             
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>商品标题</th> 
+                <th>商品数量</th>
+                <th>推广位名称</th>
+                <th>结算预估收入</th>
+                <th>支付金额</th>
+                <th>订单时间</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+	            {% for o in rows %}
+	            <tr>         
+	               <td>{{ o.item_title }}</td>
+	               <td>{{ o.item_num }}</td>
+	               <td>{{ o.adzone_name }}</td>
+	               <td>{{ o.pub_share_pre_fee }}</td>
+	               <td>{{ o.alipay_total_price }}</td>
+	               <td>{{ o.tb_paid_time }}</td>
+	            </tr>
+	            {% endfor %}
+            
+        </tbody>
+    </table>
+			    <ul class="pagination" style="padding-top:50px">
+			    {% if rows.has_previous %}
+			   <li class="page-item">
+				       <a class="page-link" onclick='pre()' href="javascript:void(0)">上一页</a>
+			   </li>
+			    {% else %}
+			      <li class="page-item disabled"><span class="page-link">Previous</span></li>
+			    {% endif %}
+			
+			  
+			    {% if rows.has_next %}
+			    <li class="page-item">
+			 		<a class="page-link" onclick="next()" href="javascript:void(0)" >下一页</a>
+			 	</li>
+			    {% else %}
+			    <li class="page-item disabled"><span class="page-link">end</span></li>
+			    {% endif %}
+			</ul>
+</div>
+   
+   
+  </article>
+
+</div>
+ 
+ <div class="signWrap">
+	<div class="sign"  style="background-color:#DEE1E6">
+		<a class="signClose" href="javascript:showSign();">点击关闭</a><br>
+		<form method="post" action="#">
+        <p>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <label for="name">平台名</label> 
+            &nbsp;&nbsp; <input type="text" id="name" placeholder="平台名" />  
+        </p>
+        <p>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <label for="tel">平台账号</label>
+            <input type="text" id="platform" placeholder="平台账号" />
+        </p>
+
+        <p class="add">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="button"  onclick="add()" value="新增" >
+        </p>
+    	</form>
+	</div>
+</div>
+
+
+         <div id="showdiv" style="width: 80%; margin: 0 auto; height:500px; border: 0px solid #999; display: none;position:fixed; *position:absolute; top:20%; left:10%; margin:-50px 0 0 -50px; background: #fff">
+			  <input type="button" onclick="closeWindow()" value="关闭">
+			    <div style="text-indent: 50px; height: 500px; padding: 0.5rem; line-height: 1rem;color:black;overflow: scroll; "  id="content"></div>
+		  </div>
+		  
+		  <script>
+		  function fabu(){
+			  
+				style="display:none;"
+				document.getElementById("two").style.display="none";
+				document.getElementById("one").style.display="";
+				$("#fubu1").empty()
+				var username=document.getElementById("user").value;  
+				
+			}
+			function weifabu(){
+				history.go(0);
+				style="display: none;"
+				document.getElementById("two").style.display="";
+				document.getElementById("one").style.display="none";
+			}
+			
+		  </script>
+		  <script>
+
+		  function already(obj){
+			 var sc_id1 = $(obj).attr('id');
+		  	 $.ajax({
+		       	type:"POST",
+		       	data:{"link":sc_id1},
+		       	url: "{% url 'get_already_link' %}",
+		       	cache: false,
+	            dataType: "json",
+	            success: function(data){
+		        	file="<table class='table'><thead><tr><th>高佣二合一链接</th><th>手淘专用淘口令</th><th>短链接</th></tr></thead><tbody><tr><td style='word-break:break-all'>"+data["coupon_click_url"]+"</td><td>"+data["tbk_pwd"]+"</td><td>"+data["coupon_short_url"]+"</td></tr></tbody></table>"
+		       		$("#content").append(file);		
+		  	        $('#showdiv').show();
+		           },
+		        });
+		  	
+		  }
+		 
+		  </script>
+		<script>  
+		  function closeWindow() {
+				$('#showdiv').hide();  
+				$("#content").empty();
+			    $('#showdiv .content').html("");   
+		  }
+        </script>
+</body>
+</html>

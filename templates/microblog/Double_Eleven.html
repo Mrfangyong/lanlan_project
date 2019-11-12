@@ -1,0 +1,389 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+ <title>双十一预售活动专场</title>
+ 	<script src="https://cdn.bootcss.com/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+        <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+        <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <link href="https://cdn.bootcss.com/bootstrap-table/1.11.1/bootstrap-table.min.css" rel="stylesheet">
+        <script src="https://cdn.bootcss.com/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
+        <script src="https://cdn.bootcss.com/bootstrap-table/1.11.1/locale/bootstrap-table-zh-CN.min.js"></script> 
+        
+<style>
+ .top{
+     width：100%;
+     background-color: #353C44;
+     height:40px;
+     border-radius:5px;
+  }
+
+            .table tbody tr td{
+      vertical-align: middle;
+	  text-align: center;
+	  table-layout:fixed;
+	  word-break:break-all;
+   }
+   .bootstrap-table .table thead>tr>th {
+                text-align: center;
+            }
+
+</style>
+
+
+</head>
+
+<body>
+<div class="top">
+   <span style="color:#FFFFFF; margin-left:50px;" >双十一预售活动专场</span>
+   <a href="javascript:back_home();" style="float:right;width: 200px;height:40px;color: #fff;background: lightblue;text-align: center;line-height: 40px;text-decoration:none" >返回主页</a>
+
+   
+</div>
+<div style="float:left">
+<h3 style="color:red">请先选择推广平台(必填):</h3>
+<select id='exclusive' style="width:100%;height:50px"">
+<option value=''>选中平台</option> 
+		{% for i in tbaok_anzones %}
+		<option value='{{ i.account_name }} {{ i.adzone_id }}'>
+		{{ i.adzone_name }} {{ i.adzone_id }}</option> 
+		{% endfor %}
+</select>
+</div>
+<div style="float:left;margin-left:20px;width:300px;">
+<h3 style="color:red">请先选择推广类别(必填):</h3>
+<select id='category' style="width:100%;height:50px"">
+<option value=''>选中类别</option> 
+		
+		<option value='综合'>综合</option> 
+		<option value='女装'>女装</option> 
+		<option value='食品'>食品</option> 
+		<option value='美妆个护'>美妆个护</option> 
+		<option value='家居家装'>家居家装</option> 
+		<option value='数码家电'>数码家电</option> 
+		<option value='母婴'>母婴</option> 
+		<option value='鞋包配饰'>鞋包配饰</option> 
+		<option value='男装'>男装</option> 
+		<option value='内衣'>内衣</option> 
+		<option value='运动户外'>运动户外</option> 
+		<option value='天猫国际'>天猫国际</option> 
+		
+
+</select>
+
+
+</div>
+<button  type="button" style="color:#FFFFFF;background-color:#5BC0DE;border-radius:5px;height:50px;margin-top:60px;margin-left:20px"  onclick="check456()" >点击确定</button>
+
+        <table id="mytab" class="table table-hover"></table>
+ <div id="showdiv" style="width: 80%; margin: 0 auto; height:500px; border: 0px solid #999; display: none;position:fixed; *position:absolute; top:20%; left:10%; margin:-50px 0 0 -50px; background: #fff">
+			  <input type="button" onclick="closeWindow()" value="关闭">
+			    <div style="text-indent: 50px; height: 500px; padding: 0.5rem; line-height: 1rem;color:black;overflow: scroll; "  id="content"></div>
+		  </div>
+
+<script type="text/javascript" >
+
+
+$('#mytab').bootstrapTable({
+			    {#全部参数#}
+			    //请求后台的URL（*）或者外部json文件，json内容若为json数组[{"id": 0,"name": "Item 0","price": "$0"},{"id": 1,"name": "Item 1","price": "$1"}]，
+			    //且键的名字必须与下方columns的field值一样，同时sidePagination需要设置为client或者直接注释掉，这样前台才能读取到数据，且分页正常。
+			    //当json文件内容为json对象时：{"tota l": 2,"rows": [{"id": 0,"name": "Item 0","price": "$0"},{"id": 1,"name": "Item 1","price": "$1"}]}，
+			    //分页要写为server，但是server如果没有处理的话,会在第一页显示所有的数据，分页插件不会起作用
+			    {#url: "{% static 'guchen_obj.json' %}",     #}
+			
+			    url:"/get_double_eleven",     //从后台获取数据时，可以是json数组，也可以是json对象
+			    dataType: "json",
+			    method: 'get',                      //请求方式（*）
+			    toolbar: '#toolbar',                //工具按钮用哪个容器
+			    striped: true,                      //是否显示行间隔色
+			    cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+			    pagination: true,                   //是否显示分页（*）
+			    sortable: true,                     //是否启用排序
+			    sortOrder: "asc",                   //排序方式
+			   
+			    sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）,数据为json数组时写client，json对象时（有total和rows时）这里要为server方式，写client列表无数据
+			    pageNumber: 1,                       //初始化加载第一页，默认第一页
+			    pageSize: 100,                       //每页的记录行数（*）
+			    pageList: [100, 500],        //可供选择的每页的行数（*）
+			    search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大#}
+			    strictSearch: true,
+			    showColumns: true,                  //是否显示所有的列
+			    showRefresh: true,                  //是否显示刷新按钮
+			    minimumCountColumns: 2,             //最少允许的列数
+			    clickToSelect: true,                //是否启用点击选中行
+			    
+			    uniqueId: "small_images",                     //每一行的唯一标识，一般为主键列
+			    showToggle: false,                    //是否显示详细视图和列表视图的切换按钮
+			    cardView: false,                    //是否显示详细视图
+			    detailView: false,                   //是否显示父子表
+			    idField: 'project_name',          //指定主键
+			    singleSelect: true,                //开启单选,想要获取被选中的行数据必须要有该参数
+			    
+			
+			    //得到查询的参数，会在url后面拼接，如：?rows=5&page=2&sortOrder=asc&search_kw=&_=1564105760651
+			    queryParams: function (params) {
+			        //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+			        var query_params = {
+			            rows: params.limit,                         //页面大小
+			            page: (params.offset / params.limit) + 1,   //页码
+			            sort: params.sort,      //排序列名
+			            sortOrder: params.order, //排位命令（desc，asc）
+			
+			            //查询框中的参数传递给后台
+			            search_kw: $('#search-keyword').val(), // 请求时向服务端传递的参数
+			        };
+			        return query_params;
+			    },
+			
+				columns: [
+					 {
+                         checkbox:true,  //第一列显示复选框
+         			    singleSelect:true,
+                         width: 50,
+                     },
+                     {
+	 						//field: 'Number',//可不加
+	 						title: '序号',//标题  可不加
+	 						width: 5, 
+	 						formatter: function (value, row, index) {
+	 							return index+1;
+	 						}
+	 	                },
+					{
+						field: 'pict_url',
+						title: '商品主图', 
+						width: 20,
+
+					},
+					{
+						field: 'click_url',
+						title: '宝贝推广链接',
+						width: 20,
+
+					},
+					{
+						field: 'commission_rate',
+						title: '佣金比率(%)',
+						width: 20,
+
+					},
+					{
+						field: 'coupon_amount',
+						title: '优惠券信息',
+						width: 20,
+
+					},
+					{
+						field: 'item_description',
+						title: '宝贝描述',
+						width: 20,
+
+					},
+
+					{
+						field: 'nick',
+						title: '卖家昵称',
+						width: 20,
+
+					},
+					
+					{
+						field: 'presale_discount_fee_text',
+						title: '预售商品-优惠信息',
+						width: 20,
+
+					},
+					{
+						field: 'small_images',
+						title: '商品信息-商品小图列表',
+						width: 20,
+
+					},
+					{
+						field: 'title',
+						title: '商品信息-商品标题',
+						width: 20,
+
+					},
+					{
+						field: 'volume',
+						title: '商品信息-30天销量',
+						width: 20,
+
+					},
+					{
+						field: 'zk_final_price',
+						title: '折扣价（元）',
+						width: 20,
+
+					},
+					 {
+			            field: 'operate',
+			            title: '操作',
+			            width: 300,
+			            align: 'center',
+			            valign: 'middle',
+			            formatter: actionFormatter,
+
+			         },
+			
+			    ],
+			    onLoadSuccess: function(data){
+			         {#获取行数据的状态#}
+			        console.log(data);
+			        {#获取所有列表数据#}
+			
+			        var data=$("#mytab").bootstrapTable("getData");
+			     
+			        {#根据每行数据的status值渲染开关#}
+			
+			    }
+			
+			    });
+				function actionFormatter(value, row, index) {
+					var id = index; 	
+					
+					var data = JSON.stringify(row);
+				
+					var data_json = JSON.parse(data);
+					var result = "";
+				
+					result += "<a href='javascript:;' class='btn btn-xs blue' onclick=\"exclusive_link(this)\" title='编辑'>点击获取专属链接</a>";
+					
+					
+					return result;
+
+
+                }
+				function goods(exclusive,link){
+					
+					alert("进来了")
+					$.ajax({
+				        type:"POST",  
+				        data: {'exclusive':exclusive,"link":link},
+				        url: "{% url 'get_exclusive_links' %}", //后台处理函数的url 这里用的是static url 需要与urls.py中的name一致
+				        cache: false,
+				        dataType: "json", 
+				        success: function(data){
+				        	
+				        	
+				        	file="<table class='table'><thead><tr><th>高佣二合一链接</th><th>手淘专用淘口令</th><th>短链接</th></tr></thead><tbody><tr><td style='word-break:break-all'>"+data["coupon_click_url"]+"</td><td>"+data["tbk_pwd"]+"</td><td>"+data["coupon_short_url"]+"</td></tr></tbody></table>"
+			        		$("#content").append(file);		
+				        	 $('#showdiv').show();
+			        	
+				        	}
+				       });     
+				}
+				function kook(){
+					var row=$("#mytab").bootstrapTable('getSelections');
+				}
+				
+				
+				function exclusive_link(this_obj){
+					
+
+					
+					
+					exclusive = document.getElementById("exclusive").value;
+					exclusivea=this_obj.parentNode.parentNode.childNodes[8].innerHTML
+					 if (exclusive == '' || exclusive == undefined || exclusive == null){
+						 alert('请选择推广平台！！！')
+					 }else{
+						 goods(exclusive,exclusivea)
+			          }
+					
+					
+				}
+
+				function closeWindow() {
+					$('#showdiv').hide();  
+					$("#content").empty();
+				    $('#showdiv .content').html("");   
+			  }	
+					
+				
+			
+
+
+</script>
+
+
+
+
+
+<script>
+function check456(){
+	
+	
+	var exclusive = document.getElementById("exclusive").value;
+	var category = document.getElementById("category").value;
+	if (exclusive == '' || exclusive == undefined || exclusive == null){
+        alert('请选择推广平台！！！')
+    }else if (category == '' || category == undefined || category == null){
+    	alert('请选择类别！！！')
+    }else{
+    	alert(exclusive)
+    	alert(category)
+    	$.ajax({ 
+            type:"POST",   
+            data: {'exclusive':exclusive,"category":category,},
+            url: "{% url 'get_double_eleven' %}", //后台处理函数的url 这里用的是static url 需要与urls.py中的name一致
+            cache: false,
+            dataType: "json",
+            success: function(data){
+            	alert("455656")
+            	location.reload();
+            }
+           });        
+    }
+
+}
+function back_home(){
+	username="{{ username }}"
+	window.location.href="/microblog_user_show?username={{ username }}";
+}
+
+
+</script>
+<!-- 
+
+ <table data-toggle="table" id="table" data-pagination="true">
+        <thead>
+            <tr>
+                <th data-field="id">编号</th>
+                <th data-field="name">名称</th>
+                <th data-field="price">价格</th>
+            </tr>
+        </thead>
+    </table>
+{% static 'my_json/mode.json' %}
+$(function () {
+    $.ajax({
+        type: "GET",
+        url: "/get_double_eleven",
+        dataType: "json",
+        success: function (msg) {
+        	
+        	alert(msg["id"])
+            $("#table").bootstrapTable('load', msg);
+        },
+        error: function () {
+            //alert("错误");
+        }
+    });
+});
+
+exclusive = document.getElementById("exclusive").value;
+					 if (exclusive == '' || exclusive == undefined || exclusive == null){
+						 alert('请选择推广平台！！！')
+					 }else{
+						 var row=$("#mytab").bootstrapTable('getSelections');
+						 kook();
+						 goods(exclusive,row[0].small_images)
+			          }
+ -->
+</body>
+</html>

@@ -1,0 +1,242 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+ <title>双十一预售活动专场</title>
+ 	    <script src="https://cdn.bootcss.com/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+        <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+        <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <link href="https://cdn.bootcss.com/bootstrap-table/1.11.1/bootstrap-table.min.css" rel="stylesheet">
+        <script src="https://cdn.bootcss.com/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>
+        <script src="https://cdn.bootcss.com/bootstrap-table/1.11.1/locale/bootstrap-table-zh-CN.min.js"></script> 
+
+<style>
+ .top{
+     width：100%;
+     background-color: #353C44;
+     height:40px;
+     border-radius:5px;
+  }
+
+ .table tbody tr td{
+      vertical-align: middle;
+	  text-align: center;
+	  table-layout:fixed;
+	  word-break:break-all;
+   }
+   .bootstrap-table .table thead>tr>th {
+                text-align: center;
+            }
+
+</style>
+
+
+</head>
+
+<body>
+<div class="top">
+   <span style="color:#FFFFFF; margin-left:50px;" >双十一预售活动专场(  网络问题翻页稍等1-2秒)</span>
+   <a href="javascript:back_home();" style="float:right;width: 200px;height:40px;color: #fff;background: lightblue;text-align: center;line-height: 40px;text-decoration:none" >返回主页</a>
+
+   
+</div>
+<div style="float:left">
+<h3 style="color:red">请先选择推广平台(必填):</h3>
+<select id='exclusive' style="width:100%;height:50px"">
+<option value=''>选中平台</option> 
+		{% for i in tbaok_anzones %}
+		<option value='{{ i.account_name }} {{ i.adzone_id }}'>
+		{{ i.adzone_name }} {{ i.adzone_id }}</option> 
+		{% endfor %}
+</select>
+</div>
+<div style="float:left;margin-left:20px;width:300px;">
+<h3 style="color:red">请先选择推广类别(必填):</h3>
+<select id='category' style="width:100%;height:50px"">
+<option value=''>选中类别</option> 
+		
+		<option value='综合'>综合</option> 
+		<option value='女装'>女装</option> 
+		<option value='食品'>食品</option> 
+		<option value='美妆个护'>美妆个护</option> 
+		<option value='家居家装'>家居家装</option> 
+		<option value='数码家电'>数码家电</option> 
+		<option value='母婴'>母婴</option> 
+		<option value='鞋包配饰'>鞋包配饰</option> 
+		<option value='男装'>男装</option> 
+		<option value='内衣'>内衣</option> 
+		<option value='运动户外'>运动户外</option> 
+		<option value='天猫国际'>天猫国际</option> 
+		
+
+</select>
+
+
+</div>
+<button  type="button" style="color:#FFFFFF;background-color:#5BC0DE;border-radius:5px;height:50px;margin-top:60px;margin-left:20px"  onclick="check456()" >点击确定</button>
+
+        <table id="mytab"  class="table table-hover">
+          
+        
+        </table>
+        <div id="page"></div>
+        <div id="showdiv" style="width: 80%; margin: 0 auto; height:500px; border: 0px solid #999; display: none;position:fixed; *position:absolute; top:20%; left:10%; margin:-50px 0 0 -50px; background: #fff">
+			  <input type="button" onclick="closeWindow()" value="关闭">
+			    <div style="text-indent: 50px; height: 500px; padding: 0.5rem; line-height: 1rem;color:black; "  id="content"></div>
+		  </div>
+
+<script type="text/javascript" >
+
+
+</script>
+
+
+
+
+
+<script>
+function goods(exclusive,link){
+	
+	alert("进来了")
+	$.ajax({
+        type:"POST",  
+        data: {'exclusive':exclusive,"link":link},
+        url: "{% url 'get_exclusive_links' %}", //后台处理函数的url 这里用的是static url 需要与urls.py中的name一致
+        cache: false,
+        dataType: "json", 
+        success: function(data){
+        	
+        	
+        	file="<table class='table table-bordered'><thead><tr><th>高佣二合一链接</th><th>手淘专用淘口令</th><th>短链接</th></tr></thead><tbody><tr><td style='word-break:break-all'>"+data["coupon_click_url"]+"</td><td>"+data["tbk_pwd"]+"</td><td>"+data["coupon_short_url"]+"</td></tr></tbody></table>"
+    		$("#content").append(file);		
+        	 $('#showdiv').show();
+    	
+        	}
+       });     
+}
+
+var new_page=1
+function check456(new_page){
+	$("#page").empty();
+	$("#mytab").empty();
+	
+	var exclusive = document.getElementById("exclusive").value;
+	var category = document.getElementById("category").value;
+	
+	
+	
+	if (exclusive == '' || exclusive == undefined || exclusive == null){
+        alert('请选择推广平台！！！')
+    }else if (category == '' || category == undefined || category == null){
+    	alert('请选择类别！！！')
+    }else{
+   
+    	$.ajax({ 
+            type:"POST",   
+            data: {'exclusive':exclusive,"category":category,"new_page":new_page},
+            url: "{% url 'get_double_eleven1' %}", //后台处理函数的url 这里用的是static url 需要与urls.py中的name一致
+            cache: false,
+            dataType: "json",
+            success: function(data){
+          
+                if (data["total"].length==0){
+                	alert("已经是最后一页")
+                	file="<button  onclick='last_page()'>上一页</button>" 	
+                	
+	 				$("#page").append(file);
+                	new_page=new_page-1
+					check456(new_page)
+                	
+                	
+                }else{
+                	
+                	 
+                	file="<table  class='table table-bordered'><thead><th>商品主图</th><th>宝贝推广链接</th><th>佣金比率(%)</th><th>优惠券信息</th><th>宝贝描述</th><th>卖家昵称</th><th>预售商品-优惠信息</th><th>商品信息-商品小图列表</th><th>商品信息-商品标题</th><th>商品信息-30天销量</th><th>折扣价（元）</th><th>操作</th></tr></thead><tbody>"
+                 		for (var i = 0; i < data["total"].length; i++){
+         	        		file+="<tr><td>"+data["total"][i][0]+"</td><td>"+data["total"][i][1]+"</td><td>"+data["total"][i][2]+"</td><td>"+data["total"][i][3]+"</td><td>"+data["total"][i][4]+"</td><td>"+data["total"][i][5]+"</td><td>"+data["total"][i][6]+"</td><td>"+data["total"][i][7]+"</td><td>"+data["total"][i][8]+"</td><td>"+data["total"][i][9]+"</td><td>"+data["total"][i][10]+"</td><td><a href='javascript:;' class='btn btn-xs blue' onclick=\"exclusive_link(this)\" title='编辑'>点击获取专属链接</a></td></tr>";
+         	        	
+         	        	}
+         	        	file+="</tbody></table>"
+         	        	
+         	        	
+         	            file1="<button  onclick='next_page()'>下一页</button>"
+         	        		
+         	            $("#page").append(file1);
+         	            
+         	            
+         	            
+         	        	
+         	        	$("#mytab").append(file);
+                }
+            		
+            			
+            	
+            	
+            }
+           });        
+    }
+
+}
+
+
+function exclusive_link(this_obj){
+	
+
+	
+	
+	exclusive = document.getElementById("exclusive").value;
+	exclusivea=this_obj.parentNode.parentNode.childNodes[7].innerHTML
+	 if (exclusive == '' || exclusive == undefined || exclusive == null){
+		 alert('请选择推广平台！！！')
+	 }else{
+		alert(exclusive)
+		alert(exclusivea)
+		goods(exclusive,exclusivea)
+      }
+	
+	
+}
+
+function last_page(){
+	$("#mytab").empty();
+	new_page-=1
+	if (new_page<=0){
+		
+		alert("当前就是第一页")
+		
+		new_page=1
+		check456(new_page)
+	}else{
+		check456(new_page)
+		file="<button onclick='last_page()'>上一页</button>" 	
+		$("#page").append(file);
+	}
+	
+		
+	
+}
+function next_page(){
+	$("#mytab").empty();	
+	new_page+=1
+	
+
+	check456(new_page)
+	file="<button  onclick='last_page()'>上一页</button>" 	
+	 $("#page").append(file);	
+}
+function back_home(){
+	username="{{ username }}"
+	window.location.href="/microblog_user_show?username={{ username }}";
+}
+function closeWindow() {
+	$('#showdiv').hide();  
+	$("#content").empty();
+    $('#showdiv .content').html("");   
+}	
+ 
+</script>
+
+</body>
+</html>

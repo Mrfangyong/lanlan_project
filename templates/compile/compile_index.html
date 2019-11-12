@@ -1,0 +1,442 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8">
+ <title>我的主页</title>
+ <link rel="stylesheet" href="{% static 'css/htmleaf-demo1.css' %}">
+ <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+<style> 
+
+body{
+background-img:#EAE8E8;
+}
+.flex-container {
+    display: -webkit-flex;
+    display: flex;  
+    -webkit-flex-flow: row wrap;
+    flex-flow: row wrap;
+    font-weight: bold;
+    text-align: center;
+    background-color:#EAE8E8;
+}
+
+.flex-container > * {
+    padding: 0px;
+    flex: 1 100%;
+}
+
+.main {
+background: #FFFFFF;
+    text-align: left;
+    height:700px;
+    margin-top:20px;
+    margin-left:20px;
+}
+
+.header {background: #FFFFFF;height:100px;margin-left:20px;margin-top:10px}
+.aside2 {background:  #FFFFFF;margin-top:20px;margin-left:20px;}
+
+@media all and (min-width: 600px) {
+    .aside { flex: 1 auto; }
+}
+
+@media all and (min-width: 800px) {
+    .main    { flex: 3 0px; }
+    .main    { order: 2; }
+    .aside2 { order: 3; }
+}
+#fabu{
+    background-color:bule;
+	display: inline-block;
+	outline: none;
+	cursor: pointer;
+	text-align: center;
+	text-decoration: none;
+	
+	font: 16px/100% 'Microsoft yahei',Arial, Helvetica, sans-serif;
+	padding: .5em 2em .55em;
+	text-shadow: 0 1px 1px rgba(0,0,0,.3);
+	-webkit-border-radius: .5em; 
+	-moz-border-radius: .5em;
+	border-radius: .5em;
+	-webkit-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+	-moz-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+	box-shadow: 0 1px 2px rgba(0,0,0,.2);
+	margin-left:20px;
+	margin-top:10px;
+}
+.table4_4 {
+margin-left:30px;
+margin-top:50px;
+}
+table4_4 table {
+	width:100%;
+	margin:15px 0;
+	border:0;
+}
+.table4_4 th {
+	background-color:#C3E7FA;
+	color:#000000
+}
+.table4_4,.table4_4 th,.table4_4 td {
+    color:#000000;
+	font-size:0.95em;
+	text-align:center;
+	padding:10px;
+	width:900px;
+	border-collapse:collapse;
+}
+.table4_4 th,.table4_4 td {
+	border: 1px solid #dcf1fc;
+	border-width:1px 0 1px 0
+}
+.table4_4 tr {
+	border: 1px solid #dcf1fc;
+}
+.table4_4 tr:nth-child(odd){
+	background-color:#ebf7fd;
+}
+.table4_4 tr:nth-child(even){
+	background-color:#fdfdfd;
+}
+button {
+		  
+		  color: #fff;
+		  border: 3px solid #fff;
+		  border-radius: 50px;
+		  padding: 0.8rem 2rem;
+		  font: 24px "Margarine", sans-serif;
+		  outline: none;
+		  cursor: pointer;
+		  position: relative;
+		  transition: 0.2s ease-in-out;
+		  letter-spacing: 2px;
+		}
+@keyframes rainbow {
+		  0% {
+		    background: #1abc9c;
+		  }
+		  10% {
+		    background: #2ecc71;
+		  }
+		  20% {
+		    background: #3498db;
+		  }
+		  30% {
+		    background: #9b59b6;
+		  }
+		  40% {
+		    background: #e74c3c;
+		  }
+		  50% {
+		    background: #e67e22;
+		  }
+		  60% {
+		    background: #f1c40f;
+		  }
+		  70% {
+		    background: #2c3e50;
+		  }
+		  80% {
+		    background: #9b59b6;
+		  }
+		}
+		.button-jittery button {
+		  animation: jittery 4s infinite;
+		}
+		.button-jittery button:hover {
+		  animation: heartbeat 0.2s infinite;
+		}
+
+		
+		@keyframes heartbeat {
+		  50% {
+		    transform: scale(1.1);
+		  }
+		}
+</style>
+<script src="http://cdn.bootcss.com/jquery/1.11.0/jquery.min.js" type="text/javascript"></script>
+<script>
+$(document).ready(function(){
+    $.ajaxSetup({
+         data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
+    });
+}); 
+
+
+function Upload_script(){
+	var username=document.getElementById("user").value;  
+	window.location.href="/Upload_script?username="+username+""; 
+	
+}
+function script_ranking(){
+	window.location.href="/script_ranking"; 
+}
+function Outstanding_drama(){
+	window.location.href="/Outstanding_drama"; 
+}
+
+function adsadssfa(obj){
+	var sc_id1 = $(obj).attr('id');
+	$('#showdiv').show();
+	$.ajax({
+        type:"POST",
+        data: {'sc_id1':sc_id1},
+        url: "{% url 'check_content' %}", //后台处理函数的url 这里用的是static url 需要与urls.py中的name一致
+        cache: false,
+        dataType: "json",
+        success: function(data){
+        	 var text ="标题：<label style='color:red'>"+data["script_title"]+"</label>&nbsp;&nbsp;&nbsp;&nbsp;标签："+"<label style='color:red'>"+data["play_age"]+","+data["play_position"]+","+data["play_sex"]+","+data["play_actor_number"]+","+data["play_product_option"] +","+data["play_content"] +","+data["play_script_type"]+"</label>"+"&nbsp;&nbsp;&nbsp;&nbsp;创作时间：<label  style='color:red'>"+data["upload_time"]+"</label>"+ "<br><br><br><p style='font-size:2px'>"+data["script_content"]+"</p>";
+            $("#content").append(text);
+        },
+        error: function(data){
+            alert(data["status"]);
+        }
+    });
+}
+function showWindow(showmsg) {
+    $('#showdiv').show();   //显示弹窗
+    $('.content').append(showmsg);    //追加内容
+}
+
+// 关闭弹窗
+function closeWindow() {
+    $('#showdiv').hide();   //隐藏弹窗
+    $('#showdiv .content').html("");    //清空追加的内容
+    $("#content").empty();
+}
+var click_nums=0
+function next_page(){
+	var post_data={
+        'click_nums':click_nums,
+    };
+	$.ajax({
+        url:"{% url 'refresh_article' %}",
+        type:"POST",
+        data:post_data,
+        success:function (name) {	
+        	$("#citys").empty();
+        	var data2 = eval(name);
+            for (var i in data2){
+            	$("#citys").append("<li style='float:left'><input type='button' onclick='three(this)' id='"+data2[i]+"' value='"+data2[i]+"' style='background-color:#EFF3F4;color:blue;border:0px;'>&nbsp;&nbsp;</li> " )
+            }
+        },
+        error:function () {
+            alert("服务器请求超时,请重试!")
+        }
+
+    });
+ click_nums=click_nums+1
+ if (click_nums>19){
+	 click_nums=0
+ }
+	
+}
+
+function previous_page(obj){
+	var sc_id1 = $(obj).attr('id')-1;
+	$.ajax({
+        url:"{% url 'compile_show' %}",
+        type:"GET",
+        data:{"index":sc_id1},
+    });
+	
+}
+
+function del(obj){
+	if(window.confirm('你确定要删除吗？')){
+		var sc_id = $(obj).attr('id')
+		$.ajax({
+	        type:"POST",
+	        data: {'sc_id1':sc_id},
+	        url: "{% url 'del_article' %}", //后台处理函数的url 这里用的是static url 需要与urls.py中的name一致
+	        cache: false,
+	        dataType: "json",
+	        success: function(data){
+	        	window.location.replace("/compile_show?compilename="+{{request.session.compilename}}+"")
+	        },
+	        
+	    });
+}
+	
+	
+
+}
+
+function update(obj){
+	var sc_id = $(obj).attr('id')
+	$.ajax({
+        type:"POST",
+        data: {'sc_id1':sc_id},
+        url: "{% url 'update_article' %}", //后台处理函数的url 这里用的是static url 需要与urls.py中的name一致
+        cache: false,
+        dataType: "json",
+        success: function(data){
+        	 window.location.replace("/update_article")
+        },
+        
+    });
+}
+function  next(){
+	{% if page.has_next %}
+    page={{ page.next_page_number }};
+    {% endif %}
+    $.ajax({
+    	type:"POST",
+    	url:"{% url 'compile_show' %}",
+    	data:{"page":page},        
+    	success:function(data){
+    		$("#jobs_table").html(data); 
+    		document.getElementById("two").style.display="block";
+         }
+    })
+}
+function pre(){
+	 {% if page.has_previous %}
+	   page={{ page.previous_page_number }};
+	　{% endif %}
+	  $.ajax({
+		  type:"POST",
+		  url:"{% url 'compile_show' %}",
+		  data:{"page":page},         
+		  success:function(data){
+			  $("#jobs_table").html(data);    
+			  document.getElementById("two").style.display="block";
+			  
+	        } 
+	    
+	 })
+}
+</script>
+<script>
+function closeWindow() {
+    $('#showdiv').hide();   //隐藏弹窗
+    $('#showdiv .content').html("");    //清空追加的内容
+    $("#content").empty();
+}
+function fabu(){
+	style="display:none;"
+	document.getElementById("one").style.display="";
+	$("#fubu2").empty()
+	var username=document.getElementById("user").value;  
+	$.ajax({
+        type:"POST",
+        data: {'username':username},
+        url: "{% url 'get_compile' %}", //后台处理函数的url 这里用的是static url 需要与urls.py中的name一致
+        cache: false,
+        dataType: "json",
+        success: function(data){  
+        	$("#fubu2").append("<tr><th>剧本标题</th><th>上传时间</th><th>使用次数</th></tr>")
+        	for (var i = 0; i < data["status"].length; i++){
+         	   $("#fubu2").append("<tr><td><input style='background-color:#EBF7FD;color:blue;border:0px' type='button' id="+data["status"][i]["script_title"]+" value="+data["status"][i]["script_title"]+" onclick='hiheir(this)'></td><td>"+data["status"][i]["upload_time"]+"</td><td>"+data["status"][i]["Script_usage"]+"</td></tr>");	   
+        	}
+        },
+        
+    });
+	document.getElementById("two").style.display="none";
+}
+function weifabu(){
+	style="display: none;"
+	document.getElementById("two").style.display="";
+	document.getElementById("one").style.display="none";
+}
+function hiheir(obj){
+	var sc_id1 = $(obj).attr('id');
+	$('#showdiv').show();
+	$.ajax({
+        type:"POST",
+        data: {'sc_id1':sc_id1},
+        url: "{% url 'actual' %}", //后台处理函数的url 这里用的是static url 需要与urls.py中的name一致
+        cache: false,
+        dataType: "json",
+        success: function(data){
+        	 var text ="标题：<label style='color:red'>"+data["script_title"]+"</label>&nbsp;&nbsp;&nbsp;&nbsp;标签："+"<label style='color:red'>"+data["play_age"]+","+data["play_position"]+","+data["play_sex"]+","+data["play_actor_number"]+","+data["play_product_option"] +","+data["play_content"] +","+data["play_script_type"]+"</label>"+"&nbsp;&nbsp;&nbsp;&nbsp;创作时间：<label  style='color:red'>"+data["upload_time"]+"</label>"+ "<br><br><br><p>"+data["script_content"]+"</p>";
+            $("#content").append(text);
+        },
+        error: function(data){
+            alert(data["status"]);
+        }
+    });
+}
+</script>
+</head>
+<body id="jobs_table">
+
+<div class="flex-container">
+  <header class="header">
+  <img src="{% static 'img/logo1.jpg' %}" style="height:80px;width:70px;float:left;margin-left:100px;margin-top:10px" alt="Logo">
+  <label style="float:left;margin-left:30px;margin-top:10px;font-size:35px">姓名:编剧一</label>
+  <div class="frist1" style="position:Absolute ;border: 1px solid black;  top:70px;left:220px;padding:5px;color:#000000;border-radius: 100px;" >编剧状态:正常</div>
+  <div style="position:Absolute ;border: 1px solid black;  top:40px;left:400px;padding:20px;color:#000000;border-radius: 100px;" >短视频剧本数量:999</div>
+  <div style="position:Absolute ;border: 1px solid black;  top:40px;left:700px;padding:20px;color:#000000;border-radius: 100px;" >图文剧本数量:999</div>
+  <div style="position:Absolute ;border: 1px solid black;  top:40px;left:1000px;padding:20px;color:#000000;border-radius: 100px;" >短视频佣金:9999</div>
+  <div style="position:Absolute ;border: 1px solid black;  top:40px;left:1300px;padding:20px;color:#000000;border-radius: 100px;" >图文佣金:9999</div>
+  </header>
+  <article class="main">
+		    <div class="item button-jittery" style="--bg-color: #f1c40f;">
+			    <button style="background: #29F01C;"   id="fabu" onclick="fabu()">已使用剧本</button>
+			    <button style="background: #24DEB9;"   id="fabu" onclick="weifabu()">未使用剧本</button>
+		    </div>
+    <div id="one" style="display:none; margin-left:20px">
+    <table class=table4_4 id="fubu2">
+          <a href="/all_compile?compilename={{request.session.compilename}}">目前只能显示前十条最近使用剧本，点击查看全部</a>
+    </table>
+    </div>
+    <div id="two" style="display:none; margin-left:20px">
+    <table class=table4_4>
+       <tr>
+          <td>剧本列表</td><!--   这是个a标签   取  剧本详情页 -->
+          <td>宣传产品</td>
+          <td>发布时间</td>
+          <td>操作</td><!--   这是个a标签   取  剧本详情页 -->
+       </tr>   
+       {% for k in page %}
+       <tr>
+          <td><input style="background-color:#EBF7FD;color:blue;border:0px" type="button" id="{{k.id}}" value="{{k.script_title}}" onclick="adsadssfa(this)"></td>
+          <td>{{k.play_product_option.product_options}}</td>
+          <td>{{k.upload_time}}</td>
+          <td><a  style="background-color:#EBF7FD;color:blue;border:0px" href="/update_article?sc_id={{k.id}}" >修改</a></td>
+          <td><input type="button" style="background-color:#EBF7FD;color:blue;border:0px" id="{{k.id}}" onclick="del(this)" value="删除"></td>
+       </tr>
+       {% endfor %}
+      
+    </table>	
+		<ul class="pagination" style="padding-top:50px">
+		    {% if page.has_previous %}
+		   <li class="page-item">
+			       <a class="page-link" onclick='pre()' href="javascript:void(0)">上一页</a>
+		   </li>
+		    {% else %}
+		      <li class="page-item disabled"><span class="page-link">Previous</span></li>
+		    {% endif %}
+		    {% if page.has_next %}
+		    <li class="page-item">
+		 		<a class="page-link" onclick="next()" href="javascript:void(0)" >下一页</a>
+		 	</li>
+		    {% else %}
+		    <li class="page-item disabled"><span class="page-link">end</span></li>
+		    {% endif %}
+		</ul>
+    </div>
+  </article>
+  <aside class="aside aside2">
+   <div class="item button-jittery" style="--bg-color: #f1c40f;">
+   <input type="hidden" id="user" value="{{compilename}}">
+      <ul style="list-style-type:none;">
+        <li style="margin-top:100px"><button style="background: #F7F50A;"  onclick="Upload_script()">上传剧本</button></li>
+        <li style="margin-top:100px"><button style="background: #E8642C;" onclick="script_ranking()">剧本排行</button></li>
+        <li style="margin-top:100px"><button style="background: #500DF5;" onclick="Outstanding_drama()">优秀剧本</button></li>
+      </ul>
+     </div>
+  </aside>
+</div>
+ <div id="showdiv" style="width: 80%; margin: 0 auto; height:500px; border: 1px solid #999; display: none; position: absolute; top: 20%; left: 10%; z-index: 3; background: #fff">
+  <input type="button" onclick="closeWindow()" value="关闭">
+    <div style="text-indent: 50px; height: 4rem; font-size: 0.8rem; padding: 0.5rem; line-height: 0.8rem;color:black "  id="content"></div>
+ </div>
+</body>
+</html>

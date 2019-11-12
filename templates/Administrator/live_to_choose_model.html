@@ -1,0 +1,451 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>直播选款管理</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script type="text/javascript">
+function uploadImg() {
+    var _name, _fileName, personsFile;
+    personsFile = document.getElementById("personsFile");
+    _name = personsFile.value;
+    _fileName = _name.substring(_name.lastIndexOf(".") + 1).toLowerCase();
+    if (_fileName !== "png" && _fileName !== "jpg") {
+    	document.getElementById("personsFile").value=""
+        alert("上传图片格式不正确，请重新上传");
+    }
+
+        $.ajax({
+        type:"POST",
+        data: {"seach1":seach1},
+        url: "{% url 'migrations:search' %}", //后台处理函数的url 这里用的是static url 需要与urls.py中的name一致
+        cache: false,
+        dataType: "json",
+        success: function(data){
+               alert("接收成功")
+                }
+        
+        })
+}
+    
+    
+}
+</script>
+<style>
+  .top{
+     width：100%;
+     background-color: #353C44;
+     height:40px;
+     border-radius:5px;
+  }
+  .header{
+     padding-top:20px
+  
+  }
+   .codding{
+   height:20px;
+   weight:100px;
+   border-radius:5px;
+   border:1px #05171A solid;
+   }
+   .derive{
+   color:#FFFFFF;
+   background-color:#5BC0DE;
+   border-radius:5px;
+   float:right;
+   margin-right:20px;
+   margin-top:5px;
+   height:30px;
+   
+   
+   }
+   .condition{
+   padding-left:20px;
+   
+   }
+   .main{
+   padding-top:30px
+   
+   }
+   .table tbody tr td{
+            vertical-align: middle;
+            text-align: center;
+        }
+
+</style>
+
+</head>
+<body>
+<div class="top">
+   <span style="color:#FFFFFF; margin-left:50px">直播选款管理</span>
+   <input type="button" class="derive" onclick="derive()" value="导出Excel">
+</div>
+<div class ="header">
+<span>款式编码：</span>
+<input type="text" class="codding" placeholder="    例如：A15955">
+<span class="condition">是否上架：</span>
+<select>
+    <option>==请选择==</option>
+    <option>是</option>
+    <option>否</option>
+</select>
+<span class="condition">版状态: </span>
+<select>
+    <option>==请选择==</option>
+    <option>未选中版</option>
+    <option>待送版</option>
+    <option>已有版</option>
+    <option>已还版</option>
+</select>
+<span class="condition">季节标签:</span>
+<select>
+    <option>==请选择==</option>
+    <option>春款</option>
+    <option>夏款</option>
+    <option>秋款</option>
+    <option>冬款</option>
+</select>
+<span class="condition">送版时间：</span>
+<input type="date" class="codding" >
+<span class="condition">还版时间：</span>
+<input type="date" class="codding" >
+<span class="condition">图片状态：</span>
+<select>
+    <option>==请选择==</option>
+    <option>已上传</option>
+    <option>未上传</option>
+</select>
+<input type="button" style="color:#FFFFFF;background-color:#5BC0DE;border-radius:5px;height:30px;"  onclick="cheak()" value="查询">
+</div>
+
+
+
+
+<div class="main">
+	<div class="table table-hover table-bordered ">
+	  <table class="table">
+	    <thead style="background-color:#5BC0DE;">
+	      <tr>
+	        <th>序号</th>
+	        <th>商品图片 款式编码</th>
+	        <th>库存量 版状态</th>
+	        <th>商品信息</th>
+	        </tr>
+	    </thead>
+	    <tbody>
+	      <tr>
+	        <td>1</td>
+	        <td><img src="{% static 'img/666.png' %}" style="width: 200px;"><br>
+	           <span>888888</span></td>
+	        <td align="center">
+		        <span style="font-size:2px">库存量：</span><br>
+		            <strong style="color:#FC7903;">1524</strong><br>
+		        <span>版状态:</span><br>
+		             <strong style="color:#FC7903">已有版    </strong><br>
+		        <span>送版日期:</span><br>
+		             <strong style="color:#FF0000">2019-04-26 </strong><br>
+		        <span>换版日期:</span><br>
+		             <strong style="color:#008000">2019-04-26  </strong><br>     
+		        <span>季节标签:</span><br>
+		             <strong style="color:#008000">春,秋,冬  </strong><br>
+	        </td>
+	        
+	        <td>
+	           <div class="table table-hover table-bordered ">
+					   <table class="table">
+					     <thead style="background-color:#d0fde3">
+					       <tr>
+					         <th>序号</th>
+					         <th>商品编码</th>
+					         <th>颜色规格</th>
+					         <th>库存数量</th>
+					         <th>图片状态</th>
+					         <th>上传图片</th>
+					       </tr>
+					      </thead>
+					       <tbody>
+						      <tr>
+						         <td>1</td>
+						         <td>88898-A-L</td>
+						         <td>米色上衣 蓝绿色裤子;L</td>
+						         <td>171</td>
+						         <td rowspan="6">未上传</td>
+						         <td rowspan="6" style="weight="12px""><input class="upload-file-img" type="file" name="file" id="personsFile" multiple="multiple" accept="image/*" onchange="uploadImg()" /></td>
+						      
+						      </tr>
+						      <tr>
+						         <td>1</td>
+						         <td>88898-A-L</td>
+						         <td>米色上衣 蓝绿色裤子;L</td>
+						         <td>171</td>
+						      </tr>
+						      <tr>
+						         <td>1</td>
+						         <td>88898-A-L</td>
+						         <td>米色上衣 蓝绿色裤子;L</td>
+						         <td>171</td>
+						      </tr>
+						      <tr>
+						         <td>1</td>
+						         <td>88898-A-L</td>
+						         <td>米色上衣 蓝绿色裤子;L</td>
+						         <td>171</td>
+						      </tr>
+						      <tr>
+						         <td>1</td>
+						         <td>88898-A-L</td>
+						         <td>米色上衣 蓝绿色裤子;L</td>
+						         <td>171</td>
+						      </tr>
+						      <tr>
+						         <td>1</td>
+						         <td>88898-A-L</td>
+						         <td>米色上衣 蓝绿色裤子;L</td>
+						         <td>171</td>
+						      </tr>
+						      <tr>
+						         <td></td>
+						         <td>汇总</td>
+						         <td></td>
+						         <td>171</td>
+						      </tr>
+						   </tbody>
+					   </table>
+				</div>
+	        </td>
+	      </tr>
+	   <tr>
+	        <td>1</td>
+	        <td><img src="{% static 'img/666.png' %}" style="width: 200px;"><br>
+	           <span style="margin-left:80px">888888</span></td>
+	        <td align="center">
+		        <span style="font-size:2px">库存量：</span><br>
+		            <strong style="color:#FC7903;">1524</strong><br>
+		        <span>版状态:</span><br>
+		             <strong style="color:#FC7903">已有版    </strong><br>
+		        <span>送版日期:</span><br>
+		             <strong style="color:#FF0000">2019-04-26 </strong><br>
+		        <span>季节标签:</span><br>
+		             <strong style="color:#008000">春,秋,冬  </strong><br>
+	        </td>
+	        
+	        <td>
+	             <div class="table table-hover table-bordered ">
+					   <table class="table">
+					     <thead style="background-color:#d0fde3">
+					       <tr>
+					         <th>序号</th>
+					         <th>商品编码</th>
+					         <th>颜色规格</th>
+					         <th>库存数量</th>
+					         <th>图片状态</th>
+					         <th>上传图片</th>
+					       </tr>
+					      </thead>
+					       <tbody>
+						      <tr>
+						         <td>1</td>
+						         <td>88898-A-L</td>
+						         <td>米色上衣 蓝绿色裤子;L</td>
+						         <td>171</td>
+						         <td rowspan="6">未上传</td>
+						         <td rowspan="6"><input class="upload-file-img" type="file" name="file" id="personsFile" multiple="multiple" accept="image/*" onchange="uploadImg()" /></td>
+						      
+						      </tr>
+						      <tr>
+						         <td>1</td>
+						         <td>88898-A-L</td>
+						         <td>米色上衣 蓝绿色裤子;L</td>
+						         <td>171</td>
+						      </tr>
+						      <tr>
+						         <td>1</td>
+						         <td>88898-A-L</td>
+						         <td>米色上衣 蓝绿色裤子;L</td>
+						         <td>171</td>
+						      </tr>
+						      <tr>
+						         <td>1</td>
+						         <td>88898-A-L</td>
+						         <td>米色上衣 蓝绿色裤子;L</td>
+						         <td>171</td>
+						      </tr>
+						      <tr>
+						         <td>1</td>
+						         <td>88898-A-L</td>
+						         <td>米色上衣 蓝绿色裤子;L</td>
+						         <td>171</td>
+						      </tr>
+						      <tr>
+						         <td>1</td>
+						         <td>88898-A-L</td>
+						         <td>米色上衣 蓝绿色裤子;L</td>
+						         <td>171</td>
+						      </tr>
+						   </tbody>
+					   </table>
+				</div>
+	        </td>
+	      </tr>
+	     <tr>
+	        <td>1</td>
+	        <td><img src="{% static 'img/666.png' %}" style="width: 200px;"><br>
+	           <span>888888</span></td>
+	        <td align="center">
+		        <span style="font-size:2px">库存量：</span><br>
+		            <strong style="color:#FC7903;">1524</strong><br>
+		        <span>版状态:</span><br>
+		             <strong style="color:#FC7903">已有版    </strong><br>
+		        <span>送版日期:</span><br>
+		             <strong style="color:#FF0000">2019-04-26 </strong><br>
+		        <span>季节标签:</span><br>
+		             <strong style="color:#008000">春,秋,冬  </strong><br>
+	        </td>
+	        
+	        <td>
+	             <div class="table table-hover table-bordered ">
+					   <table class="table">
+					     <thead style="background-color:#d0fde3">
+					       <tr>
+					         <th>序号</th>
+					         <th>商品编码</th>
+					         <th>颜色规格</th>
+					         <th>库存数量</th>
+					         <th>图片状态</th>
+					         <th>上传图片</th>
+					       </tr>
+					      </thead>
+					       <tbody>
+						      <tr>
+						         <td>1</td>
+						         <td>88898-A-L</td>
+						         <td>米色上衣 蓝绿色裤子;L</td>
+						         <td>171</td>
+						         <td rowspan="6">未上传</td>
+						         <td rowspan="6"><input class="upload-file-img" type="file" name="file" id="personsFile" multiple="multiple" accept="image/*" onchange="uploadImg()" /></td>
+						      
+						      </tr>
+						      <tr>
+						         <td>1</td>
+						         <td>88898-A-L</td>
+						         <td>米色上衣 蓝绿色裤子;L</td>
+						         <td>171</td>
+						      </tr>
+						      <tr>
+						         <td>1</td>
+						         <td>88898-A-L</td>
+						         <td>米色上衣 蓝绿色裤子;L</td>
+						         <td>171</td>
+						      </tr>
+						      <tr>
+						         <td>1</td>
+						         <td>88898-A-L</td>
+						         <td>米色上衣 蓝绿色裤子;L</td>
+						         <td>171</td>
+						      </tr>
+						      <tr>
+						         <td>1</td>
+						         <td>88898-A-L</td>
+						         <td>米色上衣 蓝绿色裤子;L</td>
+						         <td>171</td>
+						      </tr>
+						      <tr>
+						         <td>1</td>
+						         <td>88898-A-L</td>
+						         <td>米色上衣 蓝绿色裤子;L</td>
+						         <td>171</td>
+						      </tr>
+						   </tbody>
+					   </table>
+				</div>
+	        </td>
+	      </tr>
+	      <tr>
+	        <td>1</td>
+	        <td><img src="{% static 'img/666.png' %}" style="width: 200px;"><br>
+	           <span>888888</span></td>
+	        <td align="center">
+		        <span style="font-size:2px">库存量：</span><br>
+		            <strong style="color:#FC7903;">1524</strong><br>
+		        <span>版状态:</span><br>
+		             <strong style="color:#FC7903">已有版    </strong><br>
+		        <span>送版日期:</span><br>
+		             <strong style="color:#FF0000">2019-04-26 </strong><br>
+		        <span>季节标签:</span><br>
+		             <strong style="color:#008000">春,秋,冬  </strong><br>
+	        </td>
+	        
+	        <td>
+	             <div class="table table-hover table-bordered ">
+					   <table class="table">
+					     <thead style="background-color:#d0fde3">
+					       <tr>
+					         <th>序号</th>
+					         <th>商品编码</th>
+					         <th>颜色规格</th>
+					         <th>库存数量</th>
+					         <th>图片状态</th>
+					         <th>上传图片</th>
+					       </tr>
+					      </thead>
+					       <tbody>
+						      <tr>
+						         <td>1</td>
+						         <td>88898-A-L</td>
+						         <td>米色上衣 蓝绿色裤子;L</td>
+						         <td>171</td>
+						         <td rowspan="6">未上传</td>
+						         <td rowspan="6"><input class="upload-file-img" type="file" name="file" id="personsFile" multiple="multiple" accept="image/*" onchange="uploadImg()" /></td>
+						      
+						      </tr>
+						      <tr>
+						         <td>1</td>
+						         <td>88898-A-L</td>
+						         <td>米色上衣 蓝绿色裤子;L</td>
+						         <td>171</td>
+						      </tr>
+						      <tr>
+						         <td>1</td>
+						         <td>88898-A-L</td>
+						         <td>米色上衣 蓝绿色裤子;L</td>
+						         <td>171</td>
+						      </tr>
+						      <tr>
+						         <td>1</td>
+						         <td>88898-A-L</td>
+						         <td>米色上衣 蓝绿色裤子;L</td>
+						         <td>171</td>
+						      </tr>
+						      <tr>
+						         <td>1</td>
+						         <td>88898-A-L</td>
+						         <td>米色上衣 蓝绿色裤子;L</td>
+						         <td>171</td>
+						      </tr>
+						      <tr>
+						         <td>1</td>
+						         <td>88898-A-L</td>
+						         <td>米色上衣 蓝绿色裤子;L</td>
+						         <td>171</td>
+						      </tr>
+						   </tbody>
+					   </table>
+				</div>
+	        </td>
+	      </tr>
+	    </tbody>
+	  </table>
+	</div>
+</div>
+
+</body>
+</html>
